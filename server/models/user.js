@@ -1,4 +1,4 @@
-import { assetSchema } from "./asset";
+const { assetSchema } = require('./asset')
 
 const mongoose = require("mongoose");
 
