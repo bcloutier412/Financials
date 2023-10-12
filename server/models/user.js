@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
   passwordHash: String,
-  assets: [assetSchema]
+  assets: [assetSchema],
 })
 
 userSchema.set('toJSON', {

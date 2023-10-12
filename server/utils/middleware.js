@@ -8,6 +8,17 @@ const requestLogger = (request, response, next) => {
     next();
 };
 
+const errorHandler = (error, request, response, next) => {
+    console.log("Middleware Error Handling");
+    const errorStatus = error.statusCode || 500;
+    const errorMessage = error.message || 'Something went wrong';
+    response.status(errorStatus).send({
+        success: false,
+        status: errorStatus,
+        message: errorMessage,
+    })
+}
 module.exports = {
     requestLogger,
+    errorHandler
 };

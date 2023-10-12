@@ -1,97 +1,123 @@
-const authRouter = require("express").Router();
-const { User } = require('../models/user');
-const JWT = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const config = require('../utils/config');
+const authRouter = require('express').Router()
+const express = require('express');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const crypto = require('crypto');
+const bcrypt = require('bcrypt')
+const { User } = require('../models/user')
 
-authRouter.post('/register', async (request, response) => {
-  const { name, username, password } = request.body;
-
-  if (!(username.trim() && password.trim() && name.trim()))
-        return response.status(400).send({ error: "Missing required data " });
-  
+const checkAuthenticated = (request, response, next) => {
+  console.log('checking authentication')
   try {
-    // If the user already exists send an error to the client
-    let result = await User.findOne({ username: username.toLowerCase() });
-
-    if (result)
-        return response
-            .status(409)
-            .send({ error: "Username already exists" });
-
-    // Create a new user object and save that user to the database
-    const newUser = new User({
-        username: username.toLowerCase(),
-        name,
-        passwordHash: await bcrypt.hash(password, 10),
-    });
-
-    const user = await newUser.save();
-
-    // Creating Token to send back to client
-    const token = createJWTToken(user);
-
-    return response
-        .status(200)
-        .send({ token, username: user.username, name: user.name });
-
+    if (request.isAuthenticated()) { return next() }
+    return response.redirect("/login")
   } catch (error) {
-    console.log(error);
-    return response
-        .status(404)
-        .send({ error: "Request resulted in an error" });
+    return next(error)
   }
+}
+
+const checkNotAuthenticated = (request, response, next) => {
+  try {
+    if (!request.isAuthenticated()) { return next() }
+    return response.redirect("/")
+  } catch (error) {
+    return next(error)
+  }
+}
+
+authRouter.get('/testing', checkAuthenticated, function (request, response) {
+  console.log(request.isAuthenticated())
+  // console.log(request.isAuthenticated())
+  // console.log('authenticate worked')
+  // response.send(request.user)
+})
+authRouter.get("/hello", async (request, response, next) => {
+
 })
 
-authRouter.post("/login", async (request, response) => {
-  const { username, password } = request.body;
-
-  // Check to make sure the client sent a username and password
-  if (!(username.trim() && password.trim()))
-      return response.status(400).send({ error: "Missing required data " });
-
+authRouter.post('/login', function (request, response, next) {
+  console.log('login')
   try {
-      // Look for username in the database
-      const user = await User.findOne({ username: username.toLowerCase() });
+    passport.authenticate('local', function (err, user, info) {
+      if (err) {
+        return next(err); // will generate a 500 error
+      }
+      if (!user) {
+        return next({ statusCode: 200, message: info.message })
+      }
 
-      if (!user)
-          return response
-              .status(404)
-              .send({ error: "Invalid username or password" });
-
-      // Check to see the user gave the correct password
-      const isValidLogin = bcrypt.compare(password, user.passwordHash);
-
-      if (!isValidLogin)
-          return response
-              .status(401)
-              .send({ error: "Invalid username or password" });
-
-      // User credentials were correct so we will send back a JWT token        
-      // Creating Token to send back to client
-      const token = createJWTToken(user);
-
-      return response
-          .status(200)
-          .send({ token, username: user.username, name: user.name });
-
+      request.login({ id: user.id, username: user.username }, loginErr => {
+        if (loginErr) {
+          return next(loginErr);
+        }
+        return response.redirect("/")
+      });
+    })(request, response, next);
   } catch (error) {
-      console.log(error);
-      return response
-          .status(404)
-          .send({ error: "Request resulted in an error " });
+    return next(error)
   }
 });
 
-const createJWTToken = (user) => {
-  const userForToken = {
-      username: user.username,
-      id: user.id,
-  };
-  const token = JWT.sign(userForToken, config.SECRET, {
-      expiresIn: "30d",
-  });
-  return token;
-};
+authRouter.post('/register', async function (request, response, next) {
+  console.log('register')
+  // Check to see if the user already exists, if they do then send an error message
+  try {
+    const userExist = await User.findOne({ username: request.body.username })
+    if (userExist) { return next({ message: "Username is already taken" }) }
 
+    const newUser = new User({
+      username: request.body.username,
+      name: request.body.name,
+      passwordHash: await bcrypt.hash(request.body.password, 10),
+    })
+
+    const user = await newUser.save()
+    request.login({ id: user.id }, function (error) {
+      if (error) { return next(error); }
+      response.redirect('/');
+    })
+  } catch (error) {
+    return next(error)
+  }
+
+
+  // Use the request.login function
+});
+
+
+authRouter.post('/logout', function (request, response, next) {
+  request.logout(function (err) {
+    if (err) { return next(err); }
+    response.redirect('/');
+  });
+});
+
+passport.use(new LocalStrategy(async function verify(username, password, cb) {
+  console.log('local strategy')
+  try {
+    const user = await User.findOne({ username: username });
+
+    if (!user) { return cb(null, false, { message: 'Incorrect username or password.' }) };
+
+    const isValidLogin = bcrypt.compare(password, user.passwordHash);
+    if (!isValidLogin) { return cb(null, false, { message: 'Incorrect username or password.' }); }
+
+    return cb(null, user);
+  } catch (error) {
+    return cb(error)
+  }
+
+}));
+
+passport.serializeUser(function (user, cb) {
+  console.log('serializing')
+  return cb(null, user.id)
+});
+
+passport.deserializeUser(async function (id, cb) {
+  console.log('deserializing')
+  const user = await User.findOne({ _id: id })
+  if (!user) { return cb("User doesn't exist") }
+  return cb(null, user)
+});
 module.exports = authRouter;
