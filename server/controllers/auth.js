@@ -10,7 +10,7 @@ const checkAuthenticated = (request, response, next) => {
   console.log('checking authentication')
   try {
     if (request.isAuthenticated()) { return next() }
-    return response.redirect("/login")
+    else { return response.status(401).end() }
   } catch (error) {
     return next(error)
   }
@@ -29,7 +29,7 @@ authRouter.get('/testing', checkAuthenticated, function (request, response) {
   console.log(request.isAuthenticated())
   // console.log(request.isAuthenticated())
   // console.log('authenticate worked')
-  // response.send(request.user)
+  console.log(request.user)
 })
 authRouter.get("/hello", async (request, response, next) => {
 
@@ -43,14 +43,14 @@ authRouter.post('/login', function (request, response, next) {
         return next(err); // will generate a 500 error
       }
       if (!user) {
-        return next({ statusCode: 200, message: info.message })
+        return next({ statusCode: 404, message: info.message })
       }
 
       request.login({ id: user.id, username: user.username }, loginErr => {
         if (loginErr) {
           return next(loginErr);
         }
-        return response.redirect("/")
+        return response.status(200).send({ success: true, status: 201, message: "User successfully logged in"});
       });
     })(request, response, next);
   } catch (error) {
@@ -74,7 +74,8 @@ authRouter.post('/register', async function (request, response, next) {
     const user = await newUser.save()
     request.login({ id: user.id }, function (error) {
       if (error) { return next(error); }
-      response.redirect('/');
+      console.log('Redirect')
+      return response.status(201).send({ success: true, status: 201, message: "User successfully created"});
     })
   } catch (error) {
     return next(error)
