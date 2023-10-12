@@ -6,5 +6,10 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'build'
+  },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3000/', // Replace with the target host you want to proxy to
+    },
   }
 })

@@ -10,7 +10,7 @@ const checkAuthenticated = (request, response, next) => {
   console.log('checking authentication')
   try {
     if (request.isAuthenticated()) { return next() }
-    else { return response.status(401).end() }
+    else { return response.status(401).send({ message: "I got no clue"}) }
   } catch (error) {
     return next(error)
   }
@@ -29,7 +29,7 @@ authRouter.get('/testing', checkAuthenticated, function (request, response) {
   console.log(request.isAuthenticated())
   // console.log(request.isAuthenticated())
   // console.log('authenticate worked')
-  console.log(request.user)
+  response.send(request.user)
 })
 authRouter.get("/hello", async (request, response, next) => {
 

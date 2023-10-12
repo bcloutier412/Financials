@@ -29,9 +29,9 @@ const Register = () => {
     const headers = {
       "Content-Type": "application/json",
   };
-    const result = await axios.post("http://localhost:3000/api/auth/register", data, { headers })
-    console.log(result)
-    if (result.status === 201) { 
+    const result = await axios.post("/api/auth/register", data, { headers })
+
+    if (result.data.success) { 
       return navigate("/")
      }
     } catch (error) {
