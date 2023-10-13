@@ -1,29 +1,8 @@
 const authRouter = require('express').Router()
-const express = require('express');
 const passport = require('passport');
-const LocalStrategy = require('passport-local');
-const crypto = require('crypto');
 const bcrypt = require('bcrypt')
 const { User } = require('../models/user')
-
-const checkAuthenticated = (request, response, next) => {
-  console.log('checking authentication')
-  try {
-    if (request.isAuthenticated()) { return next() }
-    else { return response.status(401).send({ message: "I got no clue"}) }
-  } catch (error) {
-    return next(error)
-  }
-}
-
-const checkNotAuthenticated = (request, response, next) => {
-  try {
-    if (!request.isAuthenticated()) { return next() }
-    return response.redirect("/")
-  } catch (error) {
-    return next(error)
-  }
-}
+const { checkAuthenticated, checkNotAuthenticated } = require("../utils/auth")
 
 authRouter.get('/testing', checkAuthenticated, function (request, response) {
   console.log(request.isAuthenticated())
@@ -32,7 +11,7 @@ authRouter.get('/testing', checkAuthenticated, function (request, response) {
   response.send(request.user)
 })
 authRouter.get("/hello", async (request, response, next) => {
-
+  response.status(200).send({ message: "hello" })
 })
 
 authRouter.post('/login', function (request, response, next) {
@@ -93,32 +72,4 @@ authRouter.post('/logout', function (request, response, next) {
   });
 });
 
-passport.use(new LocalStrategy(async function verify(username, password, cb) {
-  console.log('local strategy')
-  try {
-    const user = await User.findOne({ username: username });
-
-    if (!user) { return cb(null, false, { message: 'Incorrect username or password.' }) };
-
-    const isValidLogin = bcrypt.compare(password, user.passwordHash);
-    if (!isValidLogin) { return cb(null, false, { message: 'Incorrect username or password.' }); }
-
-    return cb(null, user);
-  } catch (error) {
-    return cb(error)
-  }
-
-}));
-
-passport.serializeUser(function (user, cb) {
-  console.log('serializing')
-  return cb(null, user.id)
-});
-
-passport.deserializeUser(async function (id, cb) {
-  console.log('deserializing')
-  const user = await User.findOne({ _id: id })
-  if (!user) { return cb("User doesn't exist") }
-  return cb(null, user)
-});
 module.exports = authRouter;
