@@ -27,10 +27,9 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
   try {
     const user = await User.findOne({ username: username });
 
-    if (!user) { return cb(null, false, { message: 'Incorrect username or password.' }) };
-
-    const isValidLogin = bcrypt.compare(password, user.passwordHash);
-    if (!isValidLogin) { return cb(null, false, { message: 'Incorrect username or password.' }); }
+    if (!user) { return cb(null, false, { message: 'Incorrect username or password' }); };
+    const isValidLogin = await bcrypt.compare(password, user.passwordHash);
+    if (!isValidLogin) { return cb(null, false, { message: 'Incorrect username or password' }); };
 
     return cb(null, user);
   } catch (error) {

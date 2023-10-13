@@ -29,7 +29,7 @@ authRouter.post('/login', function (request, response, next) {
         if (loginErr) {
           return next(loginErr);
         }
-        return response.status(200).send({ success: true, status: 201, message: "User successfully logged in"});
+        return response.status(200).send({ success: true, status: 200, message: "User successfully logged in"});
       });
     })(request, response, next);
   } catch (error) {
@@ -39,10 +39,11 @@ authRouter.post('/login', function (request, response, next) {
 
 authRouter.post('/register', async function (request, response, next) {
   console.log('register')
+  // Check user input to make sure they didnt input an empty username, password, name
   // Check to see if the user already exists, if they do then send an error message
   try {
     const userExist = await User.findOne({ username: request.body.username })
-    if (userExist) { return next({ message: "Username is already taken" }) }
+    if (userExist) { return next({ statusCode: 409, message: "Username is already taken" }) }
 
     const newUser = new User({
       username: request.body.username,
@@ -59,16 +60,12 @@ authRouter.post('/register', async function (request, response, next) {
   } catch (error) {
     return next(error)
   }
-
-
-  // Use the request.login function
 });
 
 
 authRouter.post('/logout', function (request, response, next) {
   request.logout(function (err) {
     if (err) { return next(err); }
-    response.redirect('/');
   });
 });
 
