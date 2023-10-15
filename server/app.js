@@ -13,6 +13,7 @@ const { requestLogger, errorHandler } = require("./utils/middleware")
 
 // Routes
 const authRouter = require('./controllers/auth.js')
+const userRouter = require('./controllers/user.js')
 
 mongoose.set("strictQuery", false);
 
@@ -43,6 +44,7 @@ app.use(session({
 app.use(passport.authenticate('session'));
 
 app.use('/api/auth', authRouter)
+app.use('/api/user', userRouter)
 
 app.get('*', (req,res) =>{
   res.sendFile(path.join(__dirname+'/build/index.html'));
