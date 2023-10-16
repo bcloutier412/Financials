@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import userService from '../../api/userService'
 
 import { selectUserStatus, fetchUser } from '../../features/user/userSlice'
 
@@ -23,6 +22,7 @@ const Home = () => {
       return navigate("/login")
     }
   }, [userStatus, dispatch, navigate])
+
   return (
     <div className="h-full flex">
       {/* SIDE NAV */}

@@ -7,7 +7,7 @@ const checkAuthenticated = (request, response, next) => {
   console.log('checking authentication')
   try {
     if (request.isAuthenticated()) { return next() }
-    else { return response.status(401).send({ message: "I got no clue"}) }
+    else { return response.status(401).send({ message: "Authentication Failed"}) }
   } catch (error) {
     return next(error)
   }

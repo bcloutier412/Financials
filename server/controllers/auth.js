@@ -21,7 +21,7 @@ authRouter.post('/login', function (request, response, next) {
         if (loginErr) {
           return next(loginErr);
         }
-        return response.status(200).send({ success: true, status: 200, message: "User successfully logged in"});
+        return response.status(200).send({ success: true, status: 200, message: "User successfully logged in", user: { name: user.name, username: user.username} });
       });
     })(request, response, next);
   } catch (error) {

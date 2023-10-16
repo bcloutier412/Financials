@@ -70,6 +70,7 @@ describe('POST /api/auth/login', () => {
     expect(response.body).toHaveProperty("success", true)
     expect(response.body).toHaveProperty("status", 200)
     expect(response.body).toHaveProperty("message", "User successfully logged in")
+    expect(response.body).toHaveProperty("user", { "name": "newUser", "username": "newUser" })
   }, 100000)
   
   test('Attempt to log non-existent user in and receive error message', async () => {

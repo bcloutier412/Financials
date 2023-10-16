@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux'
+
+import { selectUserStatus, selectUserError, loginUser } from '../../features/user/userSlice'
 
 const Login = () => {
   const [inputs, setInputs] = useState({
@@ -8,8 +10,16 @@ const Login = () => {
     username: '',
     password: '',
   })
-  const [errorMessage, setErrorMessage] = useState("")
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userStatus = useSelector(selectUserStatus);
+  const errorMessage = useSelector(selectUserError)
+
+  useEffect(() => {
+    if (userStatus === 'succeeded') {
+      navigate("/")
+    }
+  }, [userStatus, navigate])
 
   const handleChange = (e) => {
     setInputs({
@@ -19,33 +29,20 @@ const Login = () => {
   }
 
   const handleSubmit = async (e) => {
-    try {
-      e.preventDefault()
+    e.preventDefault()
     const data = {
       username: inputs["username"].toLowerCase(),
       password: inputs["password"],
-      name: inputs["name"],
-  };
-    const headers = {
-      "Content-Type": "application/json",
-  };
-    const result = await axios.post("/api/auth/login", data, { headers })
-
-    if (result.data.success) { 
-      return navigate("/")
-     }
-    } catch (error) {
-      const errorMessage = error.response.data.message;
-      setErrorMessage(errorMessage);
-    }
+    };
+    dispatch(loginUser(data));
   }
   return (
     <div>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <div>{errorMessage}</div>
-        <input type="text" name="username" value={inputs["username"]} onChange={handleChange} placeholder="Username" required/>
-        <input type="password" name="password" value={inputs["password"]} onChange={handleChange} placeholder="Password" required/>
+        <input type="text" name="username" value={inputs["username"]} onChange={handleChange} placeholder="Username" required />
+        <input type="password" name="password" value={inputs["password"]} onChange={handleChange} placeholder="Password" required />
         <button type="submit">Submit</button>
       </form>
     </div>
