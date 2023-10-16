@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import userService from '../../api/userService'
+import authService from '../../api/authService'
 
 const initialState = {
   status: 'idle',
@@ -14,7 +15,7 @@ export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
 })
 
 export const loginUser = createAsyncThunk('user/loginUser', async (loginInfo) => {
-  const response = await userService.loginUser(loginInfo);
+  const response = await authService.loginUser(loginInfo);
   return response.data
 })
 
