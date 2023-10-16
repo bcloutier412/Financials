@@ -1,6 +1,9 @@
 import { useEffect } from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import userService from '../../api/userService'
+
+import { selectUserStatus, fetchUser } from '../../features/user/userSlice'
 
 // Components
 import SideNav from './SideNav'
@@ -9,18 +12,17 @@ import Dashboard from './Dashboard'
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+
+  const userStatus = useSelector(selectUserStatus)
+
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const result = await axios.get("/api/user/profile")
-        console.log(result)
-      } catch (error) {
-        console.log(error)
-        return navigate("/login")
-      }
+    if (userStatus === 'idle') {
+      dispatch(fetchUser())
+    } else if (userStatus === 'failed') {
+      return navigate("/login")
     }
-    fetchUser()
-  })
+  }, [userStatus, dispatch, navigate])
   return (
     <div className="h-full flex">
       {/* SIDE NAV */}
@@ -36,6 +38,7 @@ const Home = () => {
       <main className="grow">
         <Nav />
         <Dashboard />
+        
       </main>
   </div>
   )
