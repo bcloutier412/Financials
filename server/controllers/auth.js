@@ -53,8 +53,7 @@ authRouter.post('/register', async function (request, response, next) {
     // Log the user in, create a session and send an authorization token to the client
     request.login({ id: user.id }, function (error) {
       if (error) { return next(error); }
-      console.log('Redirect')
-      return response.status(201).send({ success: true, status: 201, message: "User successfully created"});
+      return response.status(201).send({ success: true, status: 201, message: "User successfully created", user: { name: user.name, username: user.username} });
     })
   } catch (error) {
     return next(error)

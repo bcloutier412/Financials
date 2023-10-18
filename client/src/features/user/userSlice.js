@@ -19,6 +19,11 @@ export const loginUser = createAsyncThunk('user/loginUser', async (loginInfo) =>
   return response.data
 })
 
+export const registerUser = createAsyncThunk('user/registerUser', async (loginInfo) => {
+  const response = await authService.registerUser(loginInfo);
+  return response.data
+})
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -54,6 +59,23 @@ const userSlice = createSlice({
         state.error = null
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+
+      builder
+      .addCase(registerUser.pending, (state) => {
+        state.status = 'loading'
+        state.error = null
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        const { name, username } = action.payload.user
+        state.status = 'succeeded'
+        state.name = name;
+        state.username = username
+        state.error = null
+      })
+      .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
       })

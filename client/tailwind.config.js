@@ -6,6 +6,14 @@ export default {
   ],
   theme: {
     extend: {},
+    colors: {
+      primary: 'rgba(67,83,240,255)',
+      white: 'rgb(255,255,255)',
+      primaryText: 'rgb(0, 0, 0)',
+      secondaryText: 'rgba(0,0,0,.6)',
+      errorText: '#ff0033',
+      secondaryOutline: 'rgba(0,0,0,.2)',
+    }
   },
   plugins: [],
   darkMode: 'class',

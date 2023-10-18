@@ -20,6 +20,7 @@ describe('POST /api/auth/register', () => {
     expect(response.body).toHaveProperty("success", true)
     expect(response.body).toHaveProperty("status", 201)
     expect(response.body).toHaveProperty("message", "User successfully created")
+    expect(response.body).toHaveProperty("user", { "name": "newUser", "username": "newUser" })
   }, 100000)
   
   test('Request register user but the username is already taken', async () => {

@@ -5,8 +5,8 @@ import React from "react";
 function App() {
   return (
     <React.Fragment>
-      <div className="dark h-full">
-        <Outlet />
+      <div className="h-screen">
+          <Outlet />
       </div>
     </React.Fragment>
 
