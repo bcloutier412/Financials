@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
 
-import { selectUserStatus, selectUserError, loginUser } from '../../features/user/userSlice'
+import { selectUserStatus, selectUserError, loginUser, resetError } from '../../features/user/userSlice'
 import Logo from '../icons/Logo'
 import HeroImage from './HeroImage';
 
@@ -29,13 +29,16 @@ const Login = () => {
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const errorMessage = useSelector(selectUserError);
   const [inputs, setInputs] = useState({
     username: '',
     password: '',
   })
 
-  const dispatch = useDispatch();
-  const errorMessage = useSelector(selectUserError);
+  useEffect(() => {
+    return () => {dispatch(resetError())}
+  }, [])
 
   const handleChange = (e) => {
     setInputs({

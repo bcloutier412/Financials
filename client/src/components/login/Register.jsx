@@ -29,14 +29,13 @@ const Register = () => {
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const errorMessage = useSelector(selectUserError);
   const [inputs, setInputs] = useState({
     name: '',
     username: '',
     password: '',
   })
-
-  const dispatch = useDispatch();
-  const errorMessage = useSelector(selectUserError);
 
   const handleChange = (e) => {
     setInputs({
