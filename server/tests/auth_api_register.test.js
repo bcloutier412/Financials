@@ -11,12 +11,16 @@ const requestPostJSON = (route, data) => {
 }
 
 beforeAll(async () => {
+  const initialDBState = [
+    {
+      name: "ExistingUser",
+      username: "ExistingUser",
+      passwordHash: await bcrypt.hash("password", 10)
+    }
+  ]
+  
   await User.deleteMany({})
-  let userObject = new User({
-    name: "ExistingUser",
-    username: "ExistingUser",
-    passwordHash: await bcrypt.hash("password", 10)
-  })
+  let userObject = new User(initialDBState[0])
   await userObject.save()
 })
 
