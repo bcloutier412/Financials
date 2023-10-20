@@ -35,6 +35,7 @@ const RegisterForm = () => {
     name: '',
     username: '',
     password: '',
+    confirmPassword: ''
   })
 
   const handleChange = (e) => {
@@ -46,6 +47,10 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (inputs.password !== inputs.confirmPassword) {
+      console.log("password different")
+      return
+    }
     const data = {
       name: inputs["name"],
       username: inputs["username"].toLowerCase(),
@@ -65,12 +70,22 @@ const RegisterForm = () => {
         <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="username" type="text" name="username" value={inputs["username"]} onChange={handleChange} placeholder="Johndoe123" required/>
         <label className="text-sm" htmlFor="password">Password</label>
         <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="password" type="password" name="password" value={inputs["password"]} onChange={handleChange} placeholder="Password" required />
+        <label className="text-sm" htmlFor="confirmPassword">Confirm Password</label>
+        <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="confirmPassword" type="password" name="confirmPassword" value={inputs["confirmPassword"]} onChange={handleChange} placeholder="Confirm Password" required />
         <div className="text-errorText text-sm">{errorMessage}</div>
-        <button className="center bg-primary text-white rounded-2xl px-2 py-3" type="submit">Register</button>
+        <button className={`center ${validateInputs(inputs) ? "bg-primary" : "bg-unconfirmedButton hover:cursor-not-allowed"} text-white rounded-2xl px-2 py-3`} type="submit" disabled={!validateInputs(inputs)}>Register</button>
         <footer>Already have an account? <span className="text-primary hover:cursor-pointer" onClick={() => navigate("/login")}>Login</span></footer>
       </form>
     </div>
   )
+}
+
+const validateInputs = (inputs) => {
+  if (inputs.password === inputs.confirmPassword && inputs.password !== "" && inputs.name && inputs.username) {
+    return true
+  } 
+
+  return false
 }
 
 export default Register

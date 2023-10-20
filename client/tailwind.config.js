@@ -8,6 +8,7 @@ export default {
     extend: {},
     colors: {
       primary: 'rgba(67,83,240,255)',
+      unconfirmedButton: 'rgba(67,83,240,.4)',
       white: 'rgb(255,255,255)',
       primaryText: 'rgb(0, 0, 0)',
       secondaryText: 'rgba(0,0,0,.6)',

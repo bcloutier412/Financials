@@ -66,10 +66,17 @@ const LoginForm = () => {
         <label className="text-sm" htmlFor="password">Password</label>
         <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="password" type="password" name="password" value={inputs["password"]} onChange={handleChange} placeholder="Password" required />
         <div className="text-errorText text-sm">{errorMessage}</div>
-        <button className="center bg-primary text-white rounded-2xl px-2 py-3" type="submit">Login</button>
+        <button className={`center ${validateInputs(inputs) ? "bg-primary" : "bg-unconfirmedButton"} text-white rounded-2xl px-2 py-3`} type="submit">Login</button>
         <footer>Need an account? <span className="text-primary hover:cursor-pointer" onClick={() => navigate("/register")}>Sign up</span></footer>
       </form>
     </div>
   )
+}
+
+const validateInputs = (inputs) => {
+  if (inputs.username && inputs.password) {
+    return true
+  }
+  return false
 }
 export default Login
