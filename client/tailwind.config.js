@@ -12,7 +12,7 @@ export default {
       white: 'rgb(255,255,255)',
       primaryText: 'rgb(0, 0, 0)',
       secondaryText: 'rgba(0,0,0,.6)',
-      errorText: '#ff0033',
+      error: '#ff0033',
       secondaryOutline: 'rgba(0,0,0,.2)',
     }
   },
