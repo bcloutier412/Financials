@@ -34,7 +34,8 @@ const RegisterForm = () => {
   const errorMessage = useSelector(selectUserError);
   const [showPassword, setShowPassword] = useState(false)
   const [inputs, setInputs] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     username: '',
     password: '',
     confirmPassword: ''
@@ -53,8 +54,9 @@ const RegisterForm = () => {
       console.log("password different")
       return
     }
+    const name = capitalizeFirstLetter(inputs["firstName"]).concat(" ", capitalizeFirstLetter(inputs["lastName"]))
     const data = {
-      name: inputs["name"],
+      name: name,
       username: inputs["username"].toLowerCase(),
       password: inputs["password"],
     };
@@ -64,14 +66,22 @@ const RegisterForm = () => {
     console.log("memo")
     return validateInputs(inputs)
   }, [inputs])
-  
+
   return (
     <div className="container px-[5%]">
       <header className="text-3xl mb-2">Get Started Now</header>
       <p className="text-sm tracking-tight mb-8 text-secondaryText">Enter your credentials to create your account</p>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <label className="text-sm" htmlFor="name">Full Name</label>
-        <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="name" type="text" name="name" value={inputs["name"]} onChange={handleChange} placeholder="John Doe" required autoFocus />
+        <div className="flex gap-6">
+          <div className="flex flex-col grow gap-4">
+            <label className="text-sm" htmlFor="name">First Name</label>
+            <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="firstName" type="text" name="firstName" value={inputs["firstName"]} onChange={handleChange} placeholder="John" required autoFocus />
+          </div>
+          <div className="flex flex-col grow gap-4">
+            <label className="text-sm" htmlFor="name">Last Name</label>
+            <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="lastName" type="text" name="lastName" value={inputs["lastName"]} onChange={handleChange} placeholder="Doe" required autoFocus />
+          </div>
+        </div>
         <label className="text-sm" htmlFor="username">Username</label>
         <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="username" type="text" name="username" value={inputs["username"]} onChange={handleChange} placeholder="Johndoe123" required />
         <label className="text-sm" htmlFor="password">Password</label>
@@ -92,11 +102,15 @@ const RegisterForm = () => {
 }
 
 const validateInputs = (inputs) => {
-  if (inputs.password === inputs.confirmPassword && inputs.password !== "" && inputs.name && inputs.username) {
+  if (inputs.password === inputs.confirmPassword && inputs.password !== "" && inputs.firstName && inputs.lastName && inputs.username) {
     return true
   }
 
   return false
+}
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export default Register
