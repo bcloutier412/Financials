@@ -57,7 +57,7 @@ const RegisterForm = () => {
     const name = capitalizeFirstLetter(inputs["firstName"].trim()).concat(" ", capitalizeFirstLetter(inputs["lastName"].trim()))
     const data = {
       name: name,
-      username: inputs["username"].toLowerCase(),
+      username: inputs["username"].toLowerCase().trim(),
       password: inputs["password"],
     };
     dispatch(registerUser(data));
