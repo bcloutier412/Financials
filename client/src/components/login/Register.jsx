@@ -54,7 +54,7 @@ const RegisterForm = () => {
       console.log("password different")
       return
     }
-    const name = capitalizeFirstLetter(inputs["firstName"]).concat(" ", capitalizeFirstLetter(inputs["lastName"]))
+    const name = capitalizeFirstLetter(inputs["firstName"].trim()).concat(" ", capitalizeFirstLetter(inputs["lastName"].trim()))
     const data = {
       name: name,
       username: inputs["username"].toLowerCase(),
