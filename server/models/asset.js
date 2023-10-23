@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const assetSchema = new mongoose.Schema({
   name: String,
   assetClass: String,
-  currentPrice: Number,
   buyInPrice: Number,
   quantity: Number,
   purchaseDate: Date,

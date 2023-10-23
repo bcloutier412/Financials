@@ -1,13 +1,12 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useNavigate, Outlet } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { TailSpin } from "react-loading-icons";
 
 import { selectUserStatus, fetchUser } from '../../features/user/userSlice'
 
 // Components
-import SideNav from './SideNav'
 import Nav from './Nav'
-import Dashboard from './Dashboard'
 
 const Home = () => {
   const navigate = useNavigate();
@@ -24,23 +23,22 @@ const Home = () => {
   }, [userStatus, dispatch, navigate])
 
   return (
-    <div className="h-full flex">
-      {/* SIDE NAV */}
-      <SideNav />
-
-      {/* 
-        CONTAINER:
-          CONTAINER:
-            Overall performance
-            Portfolio diversity
-          Benchmark performance
-      */}
-      <main className="grow">
-        <Nav />
-        <Dashboard />
-        
-      </main>
-  </div>
+    <React.Fragment>
+      {!(userStatus === "succeeded") ?
+        <div className="h-full flex justify-center items-center">
+          <TailSpin
+            className="h-12 w-12 mx-auto"
+            stroke="#3482F6"
+            speed={0.75}
+          />
+        </div>
+        :
+        <div className="h-full flex flex-col">
+          <Nav />
+          <Outlet />
+        </div>
+      }
+    </React.Fragment>
   )
 }
 

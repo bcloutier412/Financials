@@ -13,7 +13,7 @@ const Register = () => {
 
   useEffect(() => {
     if (userStatus === 'succeeded') {
-      navigate("/")
+      navigate("/home")
     }
   }, [userStatus, navigate])
 

@@ -10,6 +10,10 @@ import ErrorPage from './error-page.jsx';
 import Home from './components/home/Home.jsx'
 import Login from './components/login/Login.jsx'
 import Register from './components/login/Register.jsx'
+import { redirect } from "react-router-dom";
+
+// Components
+import Dashboard from './components/home/Dashboard.jsx';
 
 const router = createBrowserRouter([
   {
@@ -18,13 +22,26 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "",
+        path: "home",
         element: <Home />,
         loader: () => {
 
           return null
         },
-        children: []
+        children: [
+          {
+            path: "",
+            element: <Dashboard />
+          },
+          {
+            path: "assets",
+            element: <div>Assets</div>
+          },
+          {
+            path: "news",
+            element: <div>News</div>
+          }
+        ]
       },
       {
         path: "login",
@@ -33,6 +50,12 @@ const router = createBrowserRouter([
       {
         path: "register",
         element: <Register />
+      },
+      {
+        path: "",
+        loader: () => {
+          return redirect("/home");
+        }
       }
     ],
   },
