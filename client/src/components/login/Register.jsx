@@ -92,7 +92,7 @@ const RegisterForm = () => {
           </div>
         </div>
         <label className="text-sm" htmlFor="confirmPassword">Confirm Password</label>
-        <input className={`shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 ${inputs.confirmPassword !== "" && !isValidInputs ? "focus:outline-error" : "focus:outline-primary"} focus:shadow-md" id="confirmPassword`} type={showPassword ? "text" : "password"} name="confirmPassword" value={inputs["confirmPassword"]} onChange={handleChange} placeholder="Confirm Password" required />
+        <input className={`shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 ${inputs.confirmPassword !== "" && inputs.confirmPassword !== inputs.password ? "focus:outline-error" : "focus:outline-primary"} focus:shadow-md" id="confirmPassword`} type={showPassword ? "text" : "password"} name="confirmPassword" value={inputs["confirmPassword"]} onChange={handleChange} placeholder="Confirm Password" required />
         <div className="text-error text-sm">{errorMessage}</div>
         <button className={`center ${isValidInputs ? "bg-primary" : "bg-unconfirmedButton hover:cursor-not-allowed"} text-white rounded-2xl px-2 py-3`} type="submit" disabled={!isValidInputs}>Register</button>
         <footer>Already have an account? <span className="text-primary hover:cursor-pointer" onClick={() => navigate("/login")}>Login</span></footer>
