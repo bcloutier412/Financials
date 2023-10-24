@@ -2,5 +2,5 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-"username": "dino1cdd", "password": "password"
+"username": "dino12", "password": "p"
 }
