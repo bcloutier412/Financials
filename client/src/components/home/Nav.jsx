@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../features/user/userSlice'
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -27,7 +27,34 @@ const buttons = [
 const selected = "border-b border-solid border-b-primary text-primary";
 
 const Nav = () => {
-  const user = useSelector(selectUser)
+  const [width, setWidth] = useState(0);
+  const logoReference = useRef(null);
+  const userReference = useRef(null);
+
+  useEffect(() => {
+    if (logoReference.current && userReference.current) {
+      setWidth(Math.max(logoReference.current.offsetWidth, userReference.current.offsetWidth));
+    }
+  }, []);
+  return (
+    <div className="flex justify-between border-b border-solid border-b-primaryDivider">
+      <NavLogo logoReference={logoReference} width={width}/>
+      <NavButtons />
+      <NavUser userReference={userReference} width={width}/>
+    </div>
+  )
+}
+
+const NavLogo = ({ logoReference, width }) => {
+  return (
+    <div className="p-4 flex items-center gap-2" style={{ minWidth: width }} ref={logoReference}>
+      <Logo width="24" height="24" />
+      <div >Financials</div>
+    </div>
+  )
+}
+
+const NavButtons = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -37,23 +64,23 @@ const Nav = () => {
   }, [location])
 
   return (
-    <div className="flex justify-between border-b border-solid border-b-primaryDivider">
-      <div className="p-4 flex items-center">
-        <Logo width="24" height="24" />
-      </div>
-      <div className="flex gap-8 font-light">
-        {buttons.map((button) => {
-          return (<button key={button.name} className={`${lastPath === button.name && selected}`} onClick={() => navigate(button.navigate)}>{button.text}</button>)
-        })}
-      </div>
-      <div className="p-4 flex gap-2 items-center">
-        <button className="p-2 border border-solid border-primaryDivider rounded-lg">
-          <Bell width="20" height="20"/>
-        </button>
-        <div>{user.name}</div>
-      </div>
+    <div className="flex gap-8 font-light">
+      {buttons.map((button) => {
+        return (<button key={button.name} className={`${lastPath === button.name && selected}`} onClick={() => navigate(button.navigate)}>{button.text}</button>)
+      })}
     </div>
   )
 }
 
+const NavUser = ({ userReference, width }) => {
+  const user = useSelector(selectUser)
+  return (
+    <div className="p-4 flex gap-2 items-center" ref={userReference} style={{ minWidth: width }}>
+      <button className="p-2 border border-solid border-primaryDivider rounded-lg">
+        <Bell width="20" height="20" />
+      </button>
+      <div className="hover:cursor-pointer">{user.name}</div>
+    </div>
+  )
+}
 export default Nav
