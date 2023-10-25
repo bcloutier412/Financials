@@ -18,8 +18,8 @@ const Login = () => {
   }, [userStatus, navigate])
 
   return (
-    <div className="relative container flex h-full m-auto p-5 items-center">
-      <div className="absolute top-8 left-8">
+    <div className="relative container flex h-full m-auto lg:p-5 items-center">
+      <div className="absolute lg:top-8 lg:left-8 top-2 left-2">
         <Logo width="40" height="40" />
       </div>
       <LoginForm />
@@ -62,8 +62,8 @@ const LoginForm = () => {
   }, [inputs])
   return (
     <div className="container px-[5%]">
-      <header className="text-3xl mb-2">Get Started Now</header>
-      <p className="text-sm tracking-tight mb-8 text-secondaryText">Enter your credentials to access your account</p>
+      <header className="text-3xl mb-2 text-center lg:text-left">Get Started Now</header>
+      <p className="text-sm tracking-tight mb-8 text-secondaryText text-center lg:text-left">Enter your credentials to access your account</p>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <label className="text-sm" htmlFor="username">Username</label>
         <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="username" type="text" name="username" value={inputs["username"]} onChange={handleChange} placeholder="Johndoe123" required autoFocus />

@@ -5,7 +5,7 @@ import React from "react";
 function App() {
   return (
     <React.Fragment>
-      <div className="h-screen">
+      <div className="h-screen overflow-scroll">
           <Outlet />
       </div>
     </React.Fragment>

@@ -7,6 +7,7 @@ import { selectUserStatus, fetchUser } from '../../features/user/userSlice'
 
 // Components
 import Nav from './Nav'
+import Footer from './Footer';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const Home = () => {
         <div className="h-full flex flex-col">
           <Nav />
           <Outlet />
+          <Footer />
         </div>
       }
     </React.Fragment>

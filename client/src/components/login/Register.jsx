@@ -18,8 +18,8 @@ const Register = () => {
   }, [userStatus, navigate])
 
   return (
-    <div className="relative container flex h-full m-auto p-5 items-center">
-      <div className="absolute top-8 left-8">
+    <div className="relative container flex h-full m-auto lg:p-5 lg:items-center overflow-scroll">
+      <div className="absolute lg:top-8 lg:left-8 top-2 left-2">
         <Logo width="40" height="40" />
       </div>
       <RegisterForm />
@@ -68,11 +68,11 @@ const RegisterForm = () => {
   }, [inputs])
 
   return (
-    <div className="container px-[5%]">
-      <header className="text-3xl mb-2">Get Started Now</header>
-      <p className="text-sm tracking-tight mb-8 text-secondaryText">Enter your credentials to create your account</p>
+    <div className="lg:mt-0 mt-16 container px-[5%]">
+      <header className="text-3xl mb-2 text-center lg:text-left">Get Started Now</header>
+      <p className="text-sm tracking-tight mb-8 text-secondaryText text-center lg:text-left">Enter your credentials to create your account</p>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="flex gap-6">
+        <div className="flex lg:flex-row flex-col gap-6">
           <div className="flex flex-col grow gap-4">
             <label className="text-sm" htmlFor="name">First Name</label>
             <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="firstName" type="text" name="firstName" value={inputs["firstName"]} onChange={handleChange} placeholder="John" required autoFocus />
@@ -95,7 +95,7 @@ const RegisterForm = () => {
         <input className={`shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 ${inputs.confirmPassword !== "" && inputs.confirmPassword !== inputs.password ? "focus:outline-error" : "focus:outline-primary"} focus:shadow-md" id="confirmPassword`} type={showPassword ? "text" : "password"} name="confirmPassword" value={inputs["confirmPassword"]} onChange={handleChange} placeholder="Confirm Password" required />
         <div className="text-error text-sm">{errorMessage}</div>
         <button className={`center ${isValidInputs ? "bg-primary" : "bg-unconfirmedButton hover:cursor-not-allowed"} text-white rounded-2xl px-2 py-3`} type="submit" disabled={!isValidInputs}>Register</button>
-        <footer>Already have an account? <span className="text-primary hover:cursor-pointer" onClick={() => navigate("/login")}>Login</span></footer>
+        <footer className="lg:pb-0 pb-6">Already have an account? <span className="text-primary hover:cursor-pointer" onClick={() => navigate("/login")}>Login</span></footer>
       </form>
     </div>
   )
