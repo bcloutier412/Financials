@@ -33,7 +33,6 @@ const watchListSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(fetchUserWatchList.fulfilled, (state, action) => {
-        console.log(action.payload)
         state.status = 'succeeded';
         state.data = action.payload;
         state.error = null;
@@ -64,5 +63,7 @@ const watchListSlice = createSlice({
 })
 
 export const selectUserWatchList = state => state.watchList.data
+
+export const selectUserWatchListStatus = state => state.watchList.status
 
 export default watchListSlice.reducer
