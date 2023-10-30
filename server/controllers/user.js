@@ -39,7 +39,7 @@ userRouter.post('/addWatchList/:ticker', checkAuthenticated, async (request, res
     // Add the ticker to the watchList and response with a 200 request and the ticker
     watchList.push(ticker);
     await request.user.save();
-    return response.status(201).send({ success: true, status: 201, message: `${ticker} successfully added`, ticker })
+    return response.status(201).send({ success: true, status: 201, message: `${ticker} has been successfully added`, ticker })
 
   } catch (error) {
       next(error)

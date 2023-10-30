@@ -32,7 +32,7 @@ beforeAll(async () => {
  */
 describe("POST to login /api/auth/login", () => {
   test("Responds with the admin info", async () => {
-    const response = await adminUser.post('/api/auth/login').send({ username:"AdminUser", password: "password" }).set('Accept', 'application/json');
+    const response = await adminUser.post('/api/auth/login').send({ username: "AdminUser", password: "password" }).set('Accept', 'application/json');
 
     expect(response.statusCode).toEqual(200)
     expect(response.body).toHaveProperty("success", true)
@@ -48,7 +48,7 @@ describe("POST to login /api/auth/login", () => {
 describe('GET Testing out the watchList API functionality, /api/user/watchList', () => {
   test('Request the users watchList data', async () => {
     const response = await requestGetJSON('/watchList');
-    
+
     expect(response.statusCode).toEqual(200)
     expect(response.body).toHaveProperty("status", 200)
     expect(response.body).toHaveProperty("message", "Sending back user watchList")
@@ -59,9 +59,34 @@ describe('GET Testing out the watchList API functionality, /api/user/watchList',
 /**
  * @Add_to_User_WatchList
  */
-describe('POST Testing out the add to user WatchList, /api/user/watchList/:ticker', () => {
-  
-})
+describe('POST Testing out th add to user WatchList, /api/user/watchList/:ticker', () => {
+  test('Request to add a ticker to the user watchList', async () => {
+    const response = await requestPostJSON('/addWatchList/AMZN');
+
+    expect(response.statusCode).toEqual(201)
+    expect(response.body).toHaveProperty("status", 201)
+    expect(response.body).toHaveProperty("message", "AMZN has been successfully added")
+    expect(response.body).toHaveProperty("ticker", "AMZN")
+  })
+
+  test('Request to add a ticker that already exits in the watchList', async () => {
+    const alreadyExistingTicker = 'AMZN';
+    const response = await requestPostJSON(`/addWatchList/${alreadyExistingTicker}`);
+
+    expect(response.statusCode).toEqual(409)
+    expect(response.body).toHaveProperty("status", 409)
+    expect(response.body).toHaveProperty("message", `${alreadyExistingTicker} is already on the watch list`)
+  })
+
+  test('Request to add a ticker but did not give a valid ticker', async () => {
+    const randomTicker = 'wdawdawdawdada';
+    const response = await requestPostJSON(`/addWatchList/${randomTicker}`);
+
+    expect(response.statusCode).toEqual(422)
+    expect(response.body).toHaveProperty("status", 422)
+    expect(response.body).toHaveProperty("message", `${randomTicker.toUpperCase()} is not a valid ticker`)
+  })
+}, 10000)
 
 afterAll(async () => {
   await mongoose.connection.close()
