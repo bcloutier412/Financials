@@ -12,7 +12,7 @@ userRouter.get('/profile', checkAuthenticated, async (request, response, next) =
 })
 
 userRouter.get('/watchList', checkAuthenticated, async (request, response, next) => {
-  return response.send(request.user.watchList)
+  return response.status(200).send({ success: true, status: 200, message: "Sending back user watchList", watchList: request.user.watchList})
 })
 
 userRouter.post('/addWatchList/:ticker', checkAuthenticated, async (request, response, next) => {

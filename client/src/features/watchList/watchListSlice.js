@@ -33,8 +33,9 @@ const watchListSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(fetchUserWatchList.fulfilled, (state, action) => {
+        const { watchList } = action.payload;
         state.status = 'succeeded';
-        state.data = action.payload;
+        state.data = watchList;
         state.error = null;
       })
       .addCase(fetchUserWatchList.rejected, (state, action) => {

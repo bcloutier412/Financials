@@ -40,6 +40,7 @@ app.use(session({
         maxAge: 60000 * 60 * 24 * 30
     },
     resave: false,
+    saveUninitialized: false,
     name: 'passport.userpass'
 }))
 app.use(passport.authenticate('session'));
