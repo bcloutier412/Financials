@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { TailSpin } from "react-loading-icons";
 
 import { selectUserStatus, fetchUser } from '../../features/user/userSlice'
+import { fetchUserWatchList } from '../../features/watchList/watchListSlice'
 
 // Components
 import Nav from './Nav'
@@ -18,6 +19,7 @@ const Home = () => {
   useEffect(() => {
     if (userStatus === 'idle') {
       dispatch(fetchUser())
+      dispatch(fetchUserWatchList())
     } else if (userStatus === 'failed') {
       return navigate("/login")
     }
