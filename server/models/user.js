@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema({
       ref: "Asset",
     }
   ],
+  watchList: [
+    {
+      type: String
+    }
+  ]
 })
 
 userSchema.set('toJSON', {

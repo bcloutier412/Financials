@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const getUserInfo = async () => {
+const getUserProfile = async () => {
   try {
     return await axios.get('/api/user/profile')
   } catch (error) {
@@ -10,5 +10,5 @@ const getUserInfo = async () => {
 }
 
 export default {
-  getUserInfo
+  getUserProfile
 }
