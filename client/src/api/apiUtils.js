@@ -1,4 +1,4 @@
-const baseURL = "https://financial-tracker-api.vercel.app/"
+const baseURL = "https://financial-tracker-api.vercel.app"
 
 const generateURL = (urlPath) => {
   if (process.env.NODE_ENV === "production") {
