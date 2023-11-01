@@ -50,7 +50,8 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use(session({
     secret: 'something that is random',
     cookie: {
-        maxAge: 60000 * 60 * 24 * 30
+        maxAge: 60000 * 60 * 24 * 30,
+        sameSite: 'lax',
     },
     resave: false,
     saveUninitialized: false,
