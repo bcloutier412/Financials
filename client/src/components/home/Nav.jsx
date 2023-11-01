@@ -30,7 +30,7 @@ const NavLogo = ({ logoReference, width }) => {
   return (
     <div className="lg:p-4 p-2 flex items-center gap-2" style={{ minWidth: width }} ref={logoReference}>
       <Logo width="24" height="24" />
-      <div >Financials</div>
+      <div className="tracking-tight">Financials</div>
     </div>
   )
 }
@@ -80,7 +80,7 @@ const NavUser = ({ userReference, width }) => {
       <button className="p-2 border border-solid border-primaryDivider rounded-lg">
         <Bell width="20" height="20" />
       </button>
-      <div className="hover:cursor-pointer text-ellipsis overflow-hidden whitespace-wrap w-min">{user.name}</div>
+      <div className="hover:cursor-pointer text-ellipsis overflow-hidden whitespace-wrap w-min tracking-tight">{user.name}</div>
     </div>
   )
 }

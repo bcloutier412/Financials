@@ -1,10 +1,7 @@
-import WatchList from "../../features/watchList/WatchList"
-
 const Dashboard = () => {
   return (
-    <div className="grow">
-      <WatchList />
-      <div className="">Dashboard</div>
+    <div className="grow bg-primaryBackground">
+      <div className="container m-auto">Dashboard</div>
     </div>
   )
 }

@@ -14,7 +14,10 @@ export default {
       secondaryText: 'rgba(0,0,0,.6)',
       error: '#ff0033',
       secondaryOutline: 'rgba(0,0,0,.2)',
-      primaryDivider: 'rgba(0,0,0,.1)'
+      primaryDivider: 'rgba(0,0,0,.1)',
+      primaryBackground: 'rgb(242,242,242)',
+      increase: '#037b4b',
+      decrease: '#d60a22'
     }
   },
   plugins: [],
