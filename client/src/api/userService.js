@@ -1,8 +1,9 @@
 import axios from 'axios'
+import generateURL from './apiUtils';
 
 const getUserProfile = async () => {
   try {
-    return await axios.get('/api/user/profile')
+    return await axios.get(generateURL('/api/user/profile'))
   } catch (error) {
     if (error.response) throw error.response.data.message;
     throw "API is currently down"
@@ -11,7 +12,7 @@ const getUserProfile = async () => {
 
 const getUserWatchlist = async () => {
   try {
-    return await axios.get('/api/user/watchList')
+    return await axios.get(generateURL('/api/user/watchList'))
   } catch (error) {
     if (error.response) throw error.response.data.message;
     throw "API is currently down"
@@ -20,7 +21,7 @@ const getUserWatchlist = async () => {
 
 const postToUserWatchList = async (ticker) => {
   try {
-    return await axios.post(`/api/user/addWatchList/${ticker}`);
+    return await axios.post(generateURL(`/api/user/addWatchList/${ticker}`));
   } catch (error) {
     if (error.response) throw error.response.data.message;
     throw "API is currently down"
