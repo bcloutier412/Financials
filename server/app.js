@@ -51,7 +51,7 @@ app.use(session({
     secret: 'something that is random',
     cookie: {
         maxAge: 60000 * 60 * 24 * 30,
-        sameSite: 'lax',
+        sameSite: 'none',
     },
     resave: false,
     saveUninitialized: false,
