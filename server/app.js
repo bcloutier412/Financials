@@ -28,7 +28,13 @@ mongoose
         logger.error("error connection to MongoDB:", error.message);
     });
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://your-client-url.com',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+}));
+
 app.use(express.json());
 app.use(requestLogger);
 app.use(express.static(path.join(__dirname, 'build')));
@@ -49,8 +55,8 @@ app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/assets', assetsRouter)
 
-app.get('*', (req,res) => {
-  res.sendFile(path.join(__dirname+'/build/index.html'));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 
 app.use(errorHandler)
