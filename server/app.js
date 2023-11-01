@@ -31,7 +31,8 @@ mongoose
 app.use(cors({
     origin: 'https://financial-tracker-client.vercel.app',
     credentials: true,
-    optionsSuccessStatus: 200
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
 }));
 
 app.use(express.json());
