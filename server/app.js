@@ -28,8 +28,15 @@ mongoose
         logger.error("error connection to MongoDB:", error.message);
     });
 
+const whitelist = ['https://financial-tracker-client.vercel.app', 'http://localhost:5173'];
 app.use(cors({
-    origin: 'https://financial-tracker-client.vercel.app',
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']

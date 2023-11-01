@@ -1,6 +1,12 @@
 import axios from 'axios';
 
-axios.defaults.withCredentials = true;
-axios.defaults.headers = {'Content-Type': 'application/json'}
+const baseURL = process.env.NODE_ENV === "development"
+  ? "http://localhost:3000/"
+  : "https://financial-tracker-api.vercel.app/"
 
-export default axios;
+const app = axios.create({
+  baseURL,
+  withCredentials: true
+})
+
+export default app;
