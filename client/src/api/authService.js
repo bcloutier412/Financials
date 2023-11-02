@@ -1,4 +1,4 @@
-import axios from '../../axiosConfig'
+import axios from 'axios'
 
 const loginUser = async (loginInfo) => {
   const headers = {

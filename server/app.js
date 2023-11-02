@@ -28,19 +28,7 @@ mongoose
         logger.error("error connection to MongoDB:", error.message);
     });
 
-const whitelist = ['https://financial-tracker-client.vercel.app', 'http://localhost:5173'];
-app.use(cors({
-    origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
-}));
+app.use(cors());
 
 app.use(express.json());
 app.use(requestLogger);
@@ -51,8 +39,6 @@ app.use(session({
     secret: 'something that is random',
     cookie: {
         maxAge: 60000 * 60 * 24 * 30,
-        sameSite: 'lax',
-        secure: true
     },
     resave: false,
     saveUninitialized: false,
@@ -64,6 +50,11 @@ app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/assets', assetsRouter)
 
+app.get('/assets/:fileName', (req, res) => {
+    const { fileName } = request.params
+    console.log(fileName)
+    res.sendFile(path.join(__dirname + `/build/assets/fileName`))
+})
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname + '/build/index.html'));
 });
