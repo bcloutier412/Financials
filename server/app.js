@@ -50,11 +50,6 @@ app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/assets', assetsRouter)
 
-app.get('/assets/:fileName', (req, res) => {
-    const { fileName } = request.params
-    console.log(fileName)
-    res.sendFile(path.join(__dirname + `/build/assets/fileName`))
-})
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname + '/build/index.html'));
 });
