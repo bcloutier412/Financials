@@ -35,6 +35,12 @@ app.use(requestLogger);
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.static(path.join(__dirname, 'build/assets')));
 
+// Add custom MIME type for CSS files
+express.static.mime.define({ 'text/css': ['css'] });
+
+// Add custom MIME type for JavaScript files
+express.static.mime.define({ 'application/javascript': ['js'] });
+
 // Passport session config
 app.use(session({
     secret: 'something that is random',
