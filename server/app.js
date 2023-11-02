@@ -32,8 +32,8 @@ app.use(cors());
 
 app.use(express.json());
 app.use(requestLogger);
-app.use(express.static(path.join(__dirname, 'build')));
 app.use('/assets', express.static(path.join(__dirname, 'build', 'assets')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 // Add custom MIME type for CSS files
 express.static.mime.define({ 'text/css': ['css'] });
