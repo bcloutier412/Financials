@@ -50,6 +50,14 @@ app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/assets', assetsRouter)
 
+app.get('/assets/index-6fb49878.js', (request, response) => {
+    response.sendFile(path.join(__dirname + '/build/assets/index-6fb49878.js'));
+})
+
+app.get('/assets/index-828a9d77.css', (request, response) => {
+    response.sendFile(path.join(__dirname + '/build/assets/index-828a9d77.css'));
+})
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname + '/build/index.html'));
 });
