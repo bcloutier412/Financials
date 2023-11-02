@@ -52,6 +52,7 @@ app.use('/api/assets', assetsRouter)
 
 
 app.get('*', (req, res) => {
+    console.log('here')
     res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 
