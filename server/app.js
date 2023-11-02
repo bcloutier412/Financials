@@ -34,12 +34,6 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(express.static(path.join(__dirname, 'build')));
 
-// Add custom MIME type for CSS files
-express.static.mime.define({ 'text/css': ['css'] });
-
-// Add custom MIME type for JavaScript files
-express.static.mime.define({ 'application/javascript': ['js'] });
-
 // Passport session config
 app.use(session({
     secret: 'something that is random',
@@ -56,13 +50,6 @@ app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/assets', assetsRouter)
 
-app.get('/assets/index-6fb49878.js', (request, response) => {
-    res.set('Content-Type', 'application/javascript').sendFile(path.join(__dirname + '/build/assets/index-6fb49878.js'))
-})
-
-app.get('/assets/index-828a9d77.css', (request, response) => {
-    res.set('Content-Type', 'text/css').sendFile(path.join(__dirname + '/build/assets/index-828a9d77.css'))
-})
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname + '/build/index.html'));
