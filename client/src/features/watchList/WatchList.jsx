@@ -122,7 +122,7 @@ const AddWatchListButton = ({ scrollToEnd }) => {
       {active &&
         <div className="transition-[height]">
           <form className="flex gap-2" onSubmit={onSubmit}>
-            <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-1 focus:outline-primary focus:shadow-md" placeholder="Ticker Symbol"/>
+            <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-1 focus:outline-primary focus:shadow-md md:w-[185px] w-[100px]" placeholder="Ticker"/>
             <button className="bg-primary text-white rounded-2xl px-3 py-3`" type="submit">Add</button>
           </form>
         </div>
