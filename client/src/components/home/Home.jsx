@@ -27,7 +27,7 @@ const Home = () => {
   return (
     <React.Fragment>
       {!(userStatus === "succeeded") ?
-        <div className="h-full flex justify-center items-center">
+        <div className="h-screen flex justify-center items-center">
           <TailSpin
             className="h-12 w-12 mx-auto"
             stroke="#3482F6"
@@ -35,7 +35,7 @@ const Home = () => {
           />
         </div>
         :
-        <div className="h-full flex flex-col">
+        <div className="h-screen flex flex-col relative">
           <Nav />
           <WatchList />
           <Outlet />

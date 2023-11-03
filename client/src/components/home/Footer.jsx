@@ -31,7 +31,7 @@ const Footer = () => {
   }, [location])
 
   return (
-    <div className="gap-8 font-light lg:hidden flex justify-center">
+    <div className="absolute w-full bottom-0 bg-white gap-8 font-light lg:hidden flex justify-center">
       {buttons.map((button) => {
         return (<button key={button.name} className={`${lastPath === button.name && selected} py-4`} onClick={() => navigate(button.navigate)}>{button.text}</button>)
       })}
