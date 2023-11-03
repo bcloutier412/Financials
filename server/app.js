@@ -50,10 +50,8 @@ app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/assets', assetsRouter)
 
-
 app.get('*', (req, res) => {
-    console.log('here')
-    res.sendFile(path.join(__dirname + '/build/index.html'));
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.use(errorHandler)
