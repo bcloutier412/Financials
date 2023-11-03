@@ -15,7 +15,6 @@ const WatchList = () => {
   const dispatch = useDispatch()
   const watchList = useSelector(selectUserWatchList)
   const status = useSelector(selectUserWatchListStatus)
-
   useEffect(() => {
     if (status !== 'succeeded') {
       dispatch(fetchUserWatchList());
@@ -25,7 +24,7 @@ const WatchList = () => {
   return (
     <div className="bg-primaryBackground">
       {status === "succeeded" &&
-        <div className="container overflow-x-scroll no-scrollbar flex px-1 py-1 m-auto gap-2 lg:px-0 ">
+        <div className="container overflow-x-scroll custom-scrollbar flex px-1 py-1 m-auto gap-2 lg:px-0 ">
           {watchList.map(ticker => {
             return <WatchListWidget key={ticker} ticker={ticker} />
           })}
