@@ -30,41 +30,44 @@ const watchListSlice = createSlice({
     builder
       .addCase(fetchUserWatchList.pending, (state) => {
         state.error = null
-        state.status = 'loading'
+        state.status = 'loadingTickers'
       })
       .addCase(fetchUserWatchList.fulfilled, (state, action) => {
         const { watchList } = action.payload;
-        state.status = 'succeeded';
+        state.status = 'succeededLoadingTickers';
         state.data = watchList;
         state.error = null;
       })
       .addCase(fetchUserWatchList.rejected, (state, action) => {
-        state.status = 'failed'
+        state.status = 'failedLoadingTickers'
         state.error = action.error.message
       })
 
     builder
       .addCase(addToUserWatchList.pending, (state) => {
         state.error = null
-        state.status = 'loading'
+        state.status = 'loadingToAddTicker'
       })
       .addCase(addToUserWatchList.fulfilled, (state, action) => {
         const { ticker } = action.payload;
-        console.log(ticker)
-        state.status = 'succeeded';
+        state.status = 'succeededToAddTicker';
         state.data.push(ticker)
         state.error = null;
       })
       .addCase(addToUserWatchList.rejected, (state, action) => {
-        state.status = 'failed'
+        state.status = 'failedToAddTicker'
         state.error = action.error.message
       })
 
   }
 })
 
+export const { resetError } = watchListSlice.actions
+
 export const selectUserWatchList = state => state.watchList.data
 
 export const selectUserWatchListStatus = state => state.watchList.status
+
+export const selectUserWatchListError = state => state.watchList.error
 
 export default watchListSlice.reducer

@@ -4,22 +4,23 @@ import axios from 'axios'
 import protobuf from 'protobufjs';
 
 // Selectors
-import { selectUserWatchList, selectUserWatchListStatus } from './watchListSlice'
+import { selectUserWatchList, selectUserWatchListStatus, addToUserWatchList, selectUserWatchListError, resetError } from './watchListSlice'
 import { fetchUserWatchList } from "./watchListSlice"
 
 // Components
 import Plus from '../../components/icons/Plus';
 import Minus from "../../components/icons/Minus";
 import PlaceholderLoading from 'react-placeholder-loading'
+import { TailSpin } from "react-loading-icons";
 
 const WatchList = () => {
   const dispatch = useDispatch()
   const watchList = useSelector(selectUserWatchList)
-  const status = useSelector(selectUserWatchListStatus)
+  const watchListStatus = useSelector(selectUserWatchListStatus)
 
   // Fetch watchlist if it isnt in the state
   useEffect(() => {
-    if (status !== 'succeeded') {
+    if (watchListStatus !== 'succeeded') { 
       dispatch(fetchUserWatchList());
     }
   }, [])
@@ -38,13 +39,14 @@ const WatchList = () => {
 
   return (
     <div className="bg-primaryBackground">
-      {status === "succeeded" &&
-        <div ref={containerRef} className="container overflow-x-scroll custom-scrollbar flex px-1 pt-1 m-auto gap-2 lg:px-0 lg:pb-1 pb-3">
-          {watchList.map(ticker => {
-            return <WatchListWidget key={ticker} ticker={ticker} />
-          })}
-          <AddWatchListButton scrollToEnd={scrollToEnd} />
-        </div>}
+
+      <div ref={containerRef} className="container overflow-x-scroll custom-scrollbar flex px-1 pt-1 m-auto gap-2 lg:px-0 lg:pb-1 pb-3">
+        {watchListStatus === "loadingTickers" && <div>Loading Tickers</div>}
+        {watchList.map(ticker => {
+          return <WatchListWidget key={ticker} ticker={ticker} />
+        })}
+        <AddWatchListButton scrollToEnd={scrollToEnd} />
+      </div>
     </div>
   )
 }
@@ -100,38 +102,53 @@ const WatchListWidget = ({ ticker }) => {
 }
 
 const AddWatchListButton = ({ scrollToEnd }) => {
-  const [active, setActive] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [tickerInput, setTickerInput] = useState('')
+  const dispatch = useDispatch()
+  const watchListStatus = useSelector(selectUserWatchListStatus)
+  const watchListError = useSelector(selectUserWatchListError)
 
   const onSubmit = async (e) => {
     e.preventDefault()
-    console.log('clicked')
+    dispatch(addToUserWatchList(tickerInput));
+  }
+
+  const handleInputChange = (e) => {
+    setTickerInput(e.target.value)
   }
 
   // If the user clicks the plus sign it executes the scrollToEnd() function
-  const onClick = () => {
-    setActive(!active)
-  }
+  const toggleIsActive = () => setIsActive(!isActive)
+
   useEffect(() => {
-    if (active) {
+    if (isActive) {
       scrollToEnd()
+    } else {
+      setTickerInput('');
+      if (watchListError) dispatch(resetError())
     }
-  }, [active])
+  }, [isActive])
+
+  useEffect(() => {
+    if (watchListStatus === "succeededToAddTicker") setTickerInput('');
+  }, [watchListStatus])
 
   return (
     <div className="h-[75px] bg-white rounded flex items-center shadow px-2">
-      {active &&
-        <div className="transition-[height]">
+      {isActive &&
+        <div className="transition-[height] w-max">
+          {watchListStatus === "failedToAddTicker" && <div className="text-error text-xs truncate pl-1 mb-1">{watchListError}</div>}
           <form className="flex gap-2" onSubmit={onSubmit}>
-            <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-1 focus:outline-primary focus:shadow-md md:w-[185px] w-[100px]" placeholder="Ticker"/>
+            <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-1 focus:outline-primary focus:shadow-md w-[185px]" placeholder="Ticker" value={tickerInput} onChange={handleInputChange} />
             <button className="bg-primary text-white rounded-2xl px-3 py-3`" type="submit">Add</button>
           </form>
         </div>
       }
 
       {/** Displaying Plus or Minus */}
-      {active ?
-        <div className="ml-4 p-2 h-full flex items-center hover:cursor-pointer hover:text-primary" onClick={onClick}><Minus width="20" height="20" /></div> :
-        <div className="p-2 h-full flex items-center hover:cursor-pointer hover:text-primary" onClick={onClick}><Plus width="20" height="20" /></div>}
+      {isActive ?
+        <div className="ml-4 p-2 h-full flex items-center hover:cursor-pointer hover:text-primary" onClick={toggleIsActive}><Minus width="20" height="20" /></div> :
+        <div className="p-2 h-full flex items-center hover:cursor-pointer hover:text-primary" onClick={toggleIsActive}><Plus width="20" height="20" /></div>}
     </div>
   )
 }
