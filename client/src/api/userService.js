@@ -27,8 +27,18 @@ const postToUserWatchList = async (ticker) => {
   }
 }
 
+const deleteFromUserWatchList = async (ticker) => {
+  try {
+    return await axios.delete(`/api/user/deleteWatchListTicker/${ticker}`);
+  } catch (error) {
+    if (error.response) throw error.response.data.message;
+    throw "API is currently down"
+  }
+}
+
 export default {
   getUserProfile,
   getUserWatchlist,
-  postToUserWatchList
+  postToUserWatchList,
+  deleteFromUserWatchList
 }
