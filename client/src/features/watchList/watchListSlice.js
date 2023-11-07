@@ -19,18 +19,15 @@ export const addToUserWatchList = createAsyncThunk('watchList/addToUserWatchList
 
 export const deleteWatchListTicker = createAsyncThunk('watchList/deleteWatchListTicker', async (removedTicker, { getState, dispatch }) => {
   const currentState = getState().watchList.data;
-  console.log(currentState)
 
   const updatedData = currentState.filter(ticker => ticker !== removedTicker)
   dispatch(watchListSlice.actions.updateData(updatedData));
 
-  // try {
-  //   const response = await userService.deleteFromUserWatchList(removedTicker)
-  //   return response.data
-  // } catch (error) {
-  //   console.log(error)
-  // }
-  return updatedData
+  try {
+    await userService.deleteFromUserWatchList(removedTicker)
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 const watchListSlice = createSlice({
@@ -42,7 +39,7 @@ const watchListSlice = createSlice({
       state.error = "";
     },
     updateData: (state, action) => {
-      state.date = action.payload.data
+      state.data = action.payload
     }
   },
   extraReducers(builder) {
@@ -76,11 +73,6 @@ const watchListSlice = createSlice({
       .addCase(addToUserWatchList.rejected, (state, action) => {
         state.status = 'failedToAddTicker'
         state.error = action.error.message
-      })
-
-    builder
-      .addCase(deleteWatchListTicker.fulfilled, (state, action) => {
-        state.data = action.payload;
       })
   }
 })

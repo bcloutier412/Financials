@@ -6,12 +6,16 @@ const { User } = require('../models/user')
 
 const adminUser = supertest.agent(app);
 
-const requestPostJSON = (route, data) => {
-  return adminUser.post(`/api/user/${route}`).send(data).set('Accept', 'application/json');
+const requestPostJSON = (route) => {
+  return adminUser.post(`/api/user/${route}`)
 }
 
 const requestGetJSON = (route) => {
   return adminUser.get(`/api/user/${route}`)
+}
+
+const requestDeleteTicker = (route) => {
+  return adminUser.delete(`/api/user/${route}`)
 }
 
 beforeAll(async () => {
@@ -47,7 +51,7 @@ describe("POST to login /api/auth/login", () => {
  */
 describe('GET Testing out the watchList API functionality, /api/user/watchList', () => {
   test('Request the users watchList data', async () => {
-    const response = await requestGetJSON('/watchList');
+    const response = await requestGetJSON('watchList');
 
     expect(response.statusCode).toEqual(200)
     expect(response.body).toHaveProperty("status", 200)
@@ -61,7 +65,7 @@ describe('GET Testing out the watchList API functionality, /api/user/watchList',
  */
 describe('POST Testing out th add to user WatchList, /api/user/watchList/:ticker', () => {
   test('Request to add a ticker to the user watchList', async () => {
-    const response = await requestPostJSON('/addWatchList/AMZN');
+    const response = await requestPostJSON('watchList/AMZN');
 
     expect(response.statusCode).toEqual(201)
     expect(response.body).toHaveProperty("status", 201)
@@ -71,7 +75,7 @@ describe('POST Testing out th add to user WatchList, /api/user/watchList/:ticker
 
   test('Request to add a ticker that already exits in the watchList', async () => {
     const alreadyExistingTicker = 'AMZN';
-    const response = await requestPostJSON(`/addWatchList/${alreadyExistingTicker}`);
+    const response = await requestPostJSON(`watchList/${alreadyExistingTicker}`);
 
     expect(response.statusCode).toEqual(409)
     expect(response.body).toHaveProperty("status", 409)
@@ -80,11 +84,50 @@ describe('POST Testing out th add to user WatchList, /api/user/watchList/:ticker
 
   test('Request to add a ticker but did not give a valid ticker', async () => {
     const randomTicker = 'wdawdawdawdada';
-    const response = await requestPostJSON(`/addWatchList/${randomTicker}`);
+    const response = await requestPostJSON(`watchList/${randomTicker}`);
 
     expect(response.statusCode).toEqual(422)
     expect(response.body).toHaveProperty("status", 422)
     expect(response.body).toHaveProperty("message", `${randomTicker.toUpperCase()} is not a valid ticker`)
+  })
+}, 10000)
+
+/**
+ * @Get_User_WatchList_After_Adding
+ */
+describe('GET Testing out the watchList API functionality, /api/user/watchList', () => {
+  test('Request the users watchList data', async () => {
+    const response = await requestGetJSON('watchList');
+
+    expect(response.statusCode).toEqual(200)
+    expect(response.body).toHaveProperty("status", 200)
+    expect(response.body).toHaveProperty("message", "Sending back user watchList")
+    expect(response.body).toHaveProperty("watchList", ["AAPL", "NFLX", "GOOGL", "AMZN"])
+  })
+}, 10000)
+
+/**
+ * @Delete_From_User_WatchList
+ */
+describe('DELETE testing out deleting a ticker from the users watchList', () => {
+  test('Request to delete a ticker from the users watchList', async () => {
+    const response = await requestDeleteTicker('watchList/AMZN');
+
+    expect(response.statusCode).toEqual(204);
+  })
+}, 10000)
+
+/**
+ * @Get_User_WatchList_After_Deleting
+ */
+describe('GET Testing out the watchList API functionality, /api/user/watchList', () => {
+  test('Request the users watchList data', async () => {
+    const response = await requestGetJSON('watchList');
+
+    expect(response.statusCode).toEqual(200)
+    expect(response.body).toHaveProperty("status", 200)
+    expect(response.body).toHaveProperty("message", "Sending back user watchList")
+    expect(response.body).toHaveProperty("watchList", ["AAPL", "NFLX", "GOOGL"])
   })
 }, 10000)
 

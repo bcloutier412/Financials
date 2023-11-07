@@ -15,7 +15,7 @@ userRouter.get('/watchList', checkAuthenticated, async (request, response, next)
   return response.status(200).send({ success: true, status: 200, message: "Sending back user watchList", watchList: request.user.watchList})
 })
 
-userRouter.post('/addWatchList/:ticker', checkAuthenticated, async (request, response, next) => {
+userRouter.post('/watchList/:ticker', checkAuthenticated, async (request, response, next) => {
   const watchList = request.user.watchList;
   const ticker = request.params.ticker.toUpperCase()
 
@@ -45,4 +45,24 @@ userRouter.post('/addWatchList/:ticker', checkAuthenticated, async (request, res
       next(error)
   }
 })
+
+userRouter.delete('/watchList/:ticker', checkAuthenticated, async (request, response, next) => {
+  const removedTicker = request.params.ticker.toUpperCase()
+  const user = request.user;
+
+  try {
+    // Check to see they sent a ticker
+    if (!removedTicker) {
+      return next({ statusCode: 400, message: `Please input a ticker` })
+    }
+
+    user.watchList = user.watchList.filter(ticker => ticker !== removedTicker);
+    await user.save();
+
+    return response.status(204).send();
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = userRouter

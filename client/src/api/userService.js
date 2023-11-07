@@ -20,7 +20,7 @@ const getUserWatchlist = async () => {
 
 const postToUserWatchList = async (ticker) => {
   try {
-    return await axios.post(`/api/user/addWatchList/${ticker}`);
+    return await axios.post(`/api/user/watchList/${ticker}`);
   } catch (error) {
     if (error.response) throw error.response.data.message;
     throw "API is currently down"
@@ -29,7 +29,7 @@ const postToUserWatchList = async (ticker) => {
 
 const deleteFromUserWatchList = async (ticker) => {
   try {
-    return await axios.delete(`/api/user/deleteWatchListTicker/${ticker}`);
+    return await axios.delete(`/api/user/watchList/${ticker}`);
   } catch (error) {
     if (error.response) throw error.response.data.message;
     throw "API is currently down"

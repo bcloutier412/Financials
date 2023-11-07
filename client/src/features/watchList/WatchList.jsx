@@ -30,11 +30,11 @@ const WatchList = () => {
   /**
    * @Scroll_To_End- When a user clicks on the plus sign it scrolls to the end of the container
    */
-  const containerRef = useRef(null);
+  const scrollContainerRef = useRef(null);
 
   const scrollToEnd = () => {
-    if (containerRef.current) {
-      const container = containerRef.current;
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
       container.scrollLeft = container.scrollWidth;
     }
   };
@@ -42,7 +42,7 @@ const WatchList = () => {
   return (
     <div className="bg-primaryBackground">
 
-      <div ref={containerRef} className="container overflow-x-scroll custom-scrollbar flex px-1 pt-1 m-auto gap-2 lg:px-0 lg:pb-1 pb-3">
+      <div ref={scrollContainerRef} className="container overflow-x-scroll custom-scrollbar flex px-1 pt-1 m-auto gap-2 lg:px-0 lg:pb-1 pb-3">
         {watchListStatus === "loadingTickers" && <div>Loading Tickers</div>}
         {watchList.map(ticker => {
           return <WatchListWidget key={ticker} ticker={ticker} editIsActive={editIsActive} />
@@ -59,10 +59,9 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
   const [fullCompName, setFullCompName] = useState(null);
   const [marketPrice, setMarketPrice] = useState(null);
   const [marketPercentChange, setMarketPercentChange] = useState(null);
-  const handleDelete = (removedTicker) => {
-    console.log('delete')
-    dispatch(deleteWatchListTicker(removedTicker));
-  }
+
+  const handleDelete = (removedTicker) => dispatch(deleteWatchListTicker(removedTicker));
+  
   useEffect(() => {
     // const ws = new WebSocket('wss://streamer.finance.yahoo.com')
 
@@ -125,9 +124,7 @@ const AddWatchListButton = ({ scrollToEnd }) => {
   }
 
   // Handle Input for ticker
-  const handleInputChange = (e) => {
-    setTickerInput(e.target.value)
-  }
+  const handleInputChange = (e) => setTickerInput(e.target.value)
 
   // If the user clicks the plus or minus sign it toggles active attribute to show or close widget
   const toggleIsActive = () => setIsActive(!isActive)
