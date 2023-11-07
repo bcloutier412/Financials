@@ -41,14 +41,20 @@ const WatchList = () => {
 
   return (
     <div className="bg-primaryBackground">
-
       <div ref={scrollContainerRef} className="container overflow-x-scroll custom-scrollbar flex px-1 pt-1 m-auto gap-2 lg:px-0 lg:pb-1 pb-3">
-        {watchListStatus === "loadingTickers" && <div>Loading Tickers</div>}
-        {watchList.map(ticker => {
-          return <WatchListWidget key={ticker} ticker={ticker} editIsActive={editIsActive} />
-        })}
-        <EditWatchListButton setEditIsActive={setEditIsActive} editIsActive={editIsActive} />
-        <AddWatchListButton scrollToEnd={scrollToEnd} />
+        {/** If Loading tickers render LoadingTickers component */}
+        {/** If Failed to Load Tickers render failedLoadingTickers */}
+        {/** Anything Else render the watchList */}
+        {watchListStatus === "loadingTickers" ? <LoadingTickers /> :
+          watchListStatus === "failedLoadingTickers" ? <ErrorLoadingTickers /> :
+            <React.Fragment>
+              {watchList.map(ticker => {
+                return <WatchListWidget key={ticker} ticker={ticker} editIsActive={editIsActive} />
+              })}
+              <EditWatchListButton setEditIsActive={setEditIsActive} editIsActive={editIsActive} />
+              <AddWatchListButton scrollToEnd={scrollToEnd} />
+            </React.Fragment>
+        }
       </div>
     </div>
   )
@@ -61,7 +67,7 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
   const [marketPercentChange, setMarketPercentChange] = useState(null);
 
   const handleDelete = (removedTicker) => dispatch(deleteWatchListTicker(removedTicker));
-  
+
   useEffect(() => {
     // const ws = new WebSocket('wss://streamer.finance.yahoo.com')
 
@@ -153,7 +159,16 @@ const AddWatchListButton = ({ scrollToEnd }) => {
           {watchListStatus === "failedToAddTicker" && <div className="text-error text-xs truncate pl-1 mb-1">{watchListError}</div>}
           <form className="flex gap-2" onSubmit={onSubmit}>
             <input className="ml-2 shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-1 focus:outline-primary focus:shadow-md w-[185px]" placeholder="Ticker" value={tickerInput} onChange={handleInputChange} />
-            <button className="bg-primary text-white rounded-2xl px-3 py-3`" type="submit">Add</button>
+            <button className="bg-primary text-white rounded-2xl px-3 py-3`" type="submit">
+              {watchListStatus === "loadingToAddTicker" ?
+                <TailSpin
+                  className="h-6 w-6 mx-auto"
+                  stroke="white"
+                  speed={0.75}
+                /> :
+                "Add"
+              }
+            </button>
           </form>
         </div>
       }
@@ -168,10 +183,30 @@ const AddWatchListButton = ({ scrollToEnd }) => {
 
 const EditWatchListButton = ({ editIsActive, setEditIsActive }) => {
   return (
-    <div onClick={() => setEditIsActive(!editIsActive)} className="h-[75px] bg-white rounded flex justify-center items-center shadow font-light hover:cursor-pointer hover:text-primary">
+    <div onClick={() => setEditIsActive(!editIsActive)} className={`h-[75px] ${editIsActive ? "bg-primary text-white" : "bg-white hover:text-primary"} rounded flex justify-center items-center shadow font-light hover:cursor-pointer`}>
       {editIsActive ? <p className="px-2">Submit</p> : <p className="w-[52px] text-center">Edit</p>}
     </div>
   )
 }
 
+const LoadingTickers = () => {
+  return (
+    <div className="flex gap-2 items-center text-primary pt-2">
+      <TailSpin
+        className="h-6 w-6 mx-auto"
+        stroke="#3482F6"
+        speed={0.75}
+      />
+      <div>Loading WatchList</div>
+    </div>
+  )
+}
+
+const ErrorLoadingTickers = () => {
+  return (
+    <div className="flex gap-2 items-center text-error pt-2">
+      <div>Error Occured Loading WatchList</div>
+    </div>
+  )
+}
 export default WatchList
