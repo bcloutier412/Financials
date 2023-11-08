@@ -5,10 +5,12 @@ const MONGODB_URI = process.env.NODE_ENV === 'test'
   : process.env.MONGODB_URI
 const PORT = process.env.PORT
 const SECRET = process.env.SECRET
-const YHF_API = process.env.YHF_API
+const YHF_API_CHART = process.env.YHF_API_CHART
+const YHF_API_QUERY = process.env.YHF_API_QUERY
 module.exports = {
     MONGODB_URI,
     PORT,
     SECRET,
-    YHF_API
+    YHF_API_CHART,
+    YHF_API_QUERY
 }

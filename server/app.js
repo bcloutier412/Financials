@@ -15,6 +15,7 @@ const { requestLogger, errorHandler } = require("./utils/middleware")
 const authRouter = require('./controllers/auth.js')
 const userRouter = require('./controllers/user.js')
 const assetsRouter = require('./controllers/assets.js')
+const quoteRouter = require('./controllers/quote.js')
 
 mongoose.set("strictQuery", false);
 
@@ -49,6 +50,7 @@ app.use(passport.authenticate('session'));
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/assets', assetsRouter)
+app.use('/api/quote', quoteRouter)
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));

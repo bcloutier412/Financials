@@ -1,8 +1,8 @@
 const userRouter = require('express').Router()
 const axios = require('axios')
 const { User } = require('../models/user')
-const { checkAuthenticated, checkNotAuthenticated } = require("../utils/auth")
-const { YHF_API } = require('../utils/config')
+const { checkAuthenticated } = require("../utils/auth")
+const { YHF_API_CHART } = require('../utils/config')
 
 userRouter.get('/profile', checkAuthenticated, async (request, response, next) => {
   console.log(request.isAuthenticated())
@@ -31,7 +31,7 @@ userRouter.post('/watchList/:ticker', checkAuthenticated, async (request, respon
 
     // Check to see if the ticker is valid in the yahoo finance api
     try {
-      await axios.get(`${YHF_API}${ticker}`)
+      await axios.get(`${YHF_API_CHART}${ticker}`)
     } catch (error) {
       return next({ statusCode: 422, message: `${ticker} is not a valid ticker` })
     }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useSelector, useDispatch } from 'react-redux'
+import quoteService from '../../api/quoteService';
 import axios from 'axios'
 import protobuf from 'protobufjs';
 
@@ -28,7 +29,7 @@ const WatchList = () => {
   }, [])
 
   /**
-   * @Scroll_To_End- When a user clicks on the plus sign it scrolls to the end of the container
+   * @Scroll_To_End When a user clicks on the plus sign it scrolls to the end of the container
    */
   const scrollContainerRef = useRef(null);
 
@@ -64,11 +65,32 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
   const dispatch = useDispatch()
   const [fullCompName, setFullCompName] = useState(null);
   const [marketPrice, setMarketPrice] = useState(null);
+  const [pastMarketPrice, setPastMarketPrice] = useState(null);
   const [marketPercentChange, setMarketPercentChange] = useState(null);
+  const [marketPercentChangeIncrease, setMarketPercentChangeIncrease] = useState(null);
 
   const handleDelete = (removedTicker) => dispatch(deleteWatchListTicker(removedTicker));
+  const calculatePercentageChange = (pastMarketPrice, marketPrice) => {
+    const priceChange = (((marketPrice - pastMarketPrice) / pastMarketPrice) * 100).toFixed(2)
+    setMarketPercentChange(priceChange)
 
+    marketPrice >= pastMarketPrice ? setMarketPercentChangeIncrease(true) : setMarketPercentChangeIncrease(false)
+  }
   useEffect(() => {
+    const callAPIsAndPopulateState = async () => {
+      const response = await quoteService.getQuoteChartAndSearch(ticker);
+
+      const r_fullCompName = response.data.data.quote.quotes[0].shortname
+      const r_marketPrice = response.data.data.chart.meta.regularMarketPrice
+      const r_pastMarketPrice = response.data.data.chart.meta.previousClose
+
+      setFullCompName(r_fullCompName)
+      setMarketPrice(r_marketPrice)
+      setPastMarketPrice(r_pastMarketPrice)
+      calculatePercentageChange(r_pastMarketPrice, r_marketPrice)
+    }
+
+    callAPIsAndPopulateState();
     // const ws = new WebSocket('wss://streamer.finance.yahoo.com')
 
     // ws.onopen = function open() {
@@ -88,8 +110,8 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
     // }
 
     // callAPIsAndPopulateState()
-    // Call chart api
-    // Call quote api
+    // Call chart api to get the last price and the price at the beginning of the day and from this we calculate the change and alos set the initial value of the market price. Then we will connect to the web socket to get subsequent prices.
+    // Call quote api to get the name of the stock.
   }, [])
 
   return (
@@ -106,7 +128,7 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
       </div>
       <div className="flex flex-col">
         <div className="font-light text-sm tracking-tight text-secondaryText">Change</div>
-        <div className="text-increase">{marketPercentChange ? marketPercentChange : <PlaceholderLoading shape="rect" width="54.03" height="20" />}</div>
+        <div className={`${marketPercentChangeIncrease ? "text-increase" : "text-decrease"}`}>{marketPercentChange ? `${marketPercentChange}%` : <PlaceholderLoading shape="rect" width="54.03" height="20" />}</div>
       </div>
       {editIsActive &&
         <div onClick={() => handleDelete(ticker)} className="absolute -right-1 -top-1 bg-error rounded-full p-[2px] hover:cursor-pointer text-sm text-white">
