@@ -6,6 +6,7 @@ import { selectUserStatus, selectUserError, loginUser, resetError } from '../../
 import Logo from '../icons/Logo'
 import HeroImage from './HeroImage';
 import { EyeSlash, Eye } from '../icons/Eye';
+import { TailSpin } from 'react-loading-icons';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const Login = () => {
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userStatus = useSelector(selectUserStatus);
   const errorMessage = useSelector(selectUserError);
   const [showPassword, setShowPassword] = useState(false)
   const [inputs, setInputs] = useState({
@@ -75,7 +77,9 @@ const LoginForm = () => {
           </div>
         </div>
         <div className="text-error text-sm">{errorMessage}</div>
-        <button className={`center ${isValidInputs ? "bg-primary" : "bg-unconfirmedButton"} text-white rounded-2xl px-2 py-3`} type="submit">Login</button>
+        <button className={`center ${isValidInputs ? "bg-primary" : "bg-unconfirmedButton"} text-white rounded-2xl px-2 py-3`} type="submit">
+          {userStatus === "loading" ? <TailSpin className="h-6 w-6 mx-auto" stroke="white" speed={0.75} /> : "Login"}
+        </button>
         <footer>Need an account? <span className="text-primary hover:cursor-pointer" onClick={() => navigate("/register")}>Sign up</span></footer>
       </form>
     </div>

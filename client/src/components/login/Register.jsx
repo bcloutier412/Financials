@@ -6,6 +6,7 @@ import { selectUserStatus, selectUserError, registerUser } from '../../features/
 import Logo from '../icons/Logo'
 import HeroImage from './HeroImage';
 import { EyeSlash, Eye } from '../icons/Eye';
+import { TailSpin } from 'react-loading-icons';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const Register = () => {
 const RegisterForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userStatus = useSelector(selectUserStatus);
   const errorMessage = useSelector(selectUserError);
   const [showPassword, setShowPassword] = useState(false)
   const [inputs, setInputs] = useState({
@@ -79,7 +81,7 @@ const RegisterForm = () => {
           </div>
           <div className="flex flex-col grow gap-4">
             <label className="text-sm" htmlFor="name">Last Name</label>
-            <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="lastName" type="text" name="lastName" value={inputs["lastName"]} onChange={handleChange} placeholder="Doe" required autoFocus />
+            <input className="shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 focus:outline-primary focus:shadow-md" id="lastName" type="text" name="lastName" value={inputs["lastName"]} onChange={handleChange} placeholder="Doe" required />
           </div>
         </div>
         <label className="text-sm" htmlFor="username">Username</label>
@@ -94,7 +96,9 @@ const RegisterForm = () => {
         <label className="text-sm" htmlFor="confirmPassword">Confirm Password</label>
         <input className={`shadow appearance-none border border-secondaryOutline rounded-2xl px-3 py-3 ${inputs.confirmPassword !== "" && inputs.confirmPassword !== inputs.password ? "focus:outline-error" : "focus:outline-primary"} focus:shadow-md" id="confirmPassword`} type={showPassword ? "text" : "password"} name="confirmPassword" value={inputs["confirmPassword"]} onChange={handleChange} placeholder="Confirm Password" required />
         <div className="text-error text-sm">{errorMessage}</div>
-        <button className={`center ${isValidInputs ? "bg-primary" : "bg-unconfirmedButton hover:cursor-not-allowed"} text-white rounded-2xl px-2 py-3`} type="submit" disabled={!isValidInputs}>Register</button>
+        <button className={`center ${isValidInputs ? "bg-primary" : "bg-unconfirmedButton hover:cursor-not-allowed"} text-white rounded-2xl px-2 py-3`} type="submit" disabled={!isValidInputs}>
+          {userStatus === "loading" ? <TailSpin className="h-6 w-6 mx-auto" stroke="white" speed={0.75} /> : "Register"}
+        </button>
         <footer className="lg:pb-0 pb-6">Already have an account? <span className="text-primary hover:cursor-pointer" onClick={() => navigate("/login")}>Login</span></footer>
       </form>
     </div>

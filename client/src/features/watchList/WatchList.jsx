@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import quoteService from '../../api/quoteService';
 import axios from 'axios'
 import protobuf from 'protobufjs';
+import { Buffer } from 'buffer/';
 
 // Selectors
 import { selectUserWatchList, selectUserWatchListStatus, addToUserWatchList, selectUserWatchListError, deleteWatchListTicker, resetError } from './watchListSlice'
@@ -65,7 +66,6 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
   const dispatch = useDispatch()
   const [fullCompName, setFullCompName] = useState(null);
   const [marketPrice, setMarketPrice] = useState(null);
-  const [pastMarketPrice, setPastMarketPrice] = useState(null);
   const [marketPercentChange, setMarketPercentChange] = useState(null);
   const [marketPercentChangeIncrease, setMarketPercentChangeIncrease] = useState(null);
 
@@ -81,41 +81,50 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
       const response = await quoteService.getQuoteChartAndSearch(ticker);
 
       const r_fullCompName = response.data.data.quote.quotes[0].shortname
-      const r_marketPrice = response.data.data.chart.meta.regularMarketPrice
-      const r_pastMarketPrice = response.data.data.chart.meta.previousClose
+      const r_marketPrice = response.data.data.chart.meta.regularMarketPrice.toFixed(2)
+      const r_pastMarketPrice = response.data.data.chart.meta.previousClose.toFixed(2)
 
       setFullCompName(r_fullCompName)
       setMarketPrice(r_marketPrice)
-      setPastMarketPrice(r_pastMarketPrice)
       calculatePercentageChange(r_pastMarketPrice, r_marketPrice)
+
+
+      const ws = new WebSocket('wss://streamer.finance.yahoo.com');
+      protobuf.load('../../../public/YPricingData.proto', (error, root) => {
+        if (error) {
+          return console.log(error);
+        }
+        const Yaticker = root.lookupType('yaticker');
+
+        ws.onopen = function open() {
+          console.log('connected');
+          ws.send(
+            JSON.stringify({
+              subscribe: [ticker.toUpperCase()],
+            })
+          );
+        };
+
+        ws.onclose = function close() {
+          console.log('disconnected');
+        };
+
+        ws.onmessage = function incoming(message) {
+          const data = Yaticker.decode(new Buffer(message.data, 'base64'));
+          const newMarketPrice = data.price.toFixed(2);
+          if (newMarketPrice !== marketPrice) {
+            setMarketPrice(newMarketPrice);
+            calculatePercentageChange(r_pastMarketPrice, newMarketPrice)
+          }
+        };
+      });
     }
 
     callAPIsAndPopulateState();
-    // const ws = new WebSocket('wss://streamer.finance.yahoo.com')
-
-    // ws.onopen = function open() {
-    //   console.log('connected');
-    //   ws.send(JSON.stringify({
-    //     subscribe: [ticker]
-    //   }))
-    // }
-
-    // ws.onclose = function close() {
-    //   console.log('disconnected')
-    // }
-
-    // ws.onmessage = function incoming(data) {
-    //   console.log(`coming message ${ticker}`)
-    //   console.log(data)
-    // }
-
-    // callAPIsAndPopulateState()
-    // Call chart api to get the last price and the price at the beginning of the day and from this we calculate the change and alos set the initial value of the market price. Then we will connect to the web socket to get subsequent prices.
-    // Call quote api to get the name of the stock.
   }, [])
 
   return (
-    <div className="relative shrink-0 bg-white rounded shadow flex p-2 items-center gap-6 px-2">
+    <div className="relative shrink-0 bg-white rounded shadow flex py-2 items-center gap-6 px-5">
       <div className="flex">
         <div className="flex flex-col w-[120px]">
           <div className="font-medium tracking-tight text-primary hover:cursor-pointer hover:underline">{ticker}</div>
@@ -124,7 +133,7 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
       </div>
       <div className="flex flex-col">
         <div className="font-light text-sm tracking-tight text-secondaryText">Market Price</div>
-        <div className="text-increase">{marketPrice ? marketPrice : <PlaceholderLoading shape="rect" width="79.82" height="20" />}</div>
+        <div className={`${marketPercentChangeIncrease ? "text-increase" : "text-decrease"}`}>{marketPrice ? marketPrice : <PlaceholderLoading shape="rect" width="79.82" height="20" />}</div>
       </div>
       <div className="flex flex-col">
         <div className="font-light text-sm tracking-tight text-secondaryText">Change</div>
