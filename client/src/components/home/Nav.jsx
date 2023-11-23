@@ -6,6 +6,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import Logo from '../icons/Logo'
 import Bell from '../icons/Bell'
+import Profile from '../icons/Profile';
+import Setting from '../icons/Setting'
 
 const Nav = () => {
   const [width, setWidth] = useState(0);
@@ -14,14 +16,14 @@ const Nav = () => {
 
   useEffect(() => {
     if (logoReference.current && userReference.current) {
-      setWidth(Math.max(logoReference.current.offsetWidth, userReference.current.offsetWidth));
+      setWidth(userReference.current.offsetWidth);
     }
   }, []);
   return (
     <div className="flex justify-between border-b border-solid border-b-primaryDivider">
-      <NavLogo logoReference={logoReference} width={width}/>
+      <NavLogo logoReference={logoReference} width={width} />
       <NavButtons />
-      <NavUser userReference={userReference} width={width}/>
+      <NavUser userReference={userReference} width={width} />
     </div>
   )
 }
@@ -75,12 +77,18 @@ export const NavButtons = () => {
 
 const NavUser = ({ userReference, width }) => {
   const user = useSelector(selectUser)
+
   return (
-    <div className="lg:p-4 p-2  flex gap-2 items-center justify-end" ref={userReference} style={{ minWidth: width, maxWidth: "150px" }}>
-      <button className="p-2 border border-solid border-primaryDivider rounded-lg">
+    <div className="relative lg:p-4 p-2  flex gap-2 items-center justify-between" ref={userReference} style={{ minWidth: width, maxWidth: "170px" }}>
+      <button className="relative p-2 border border-solid border-primaryDivider rounded-lg hover:text-primary hover:border-primary">
+        <Setting width="20" height="20" />
+      </button>
+      <button className="p-2 border border-solid border-primaryDivider rounded-lg hover:text-primary hover:border-primary">
         <Bell width="20" height="20" />
       </button>
-      <div className="hover:cursor-pointer text-ellipsis overflow-hidden whitespace-wrap w-min tracking-tight">{user.name}</div>
+      <button className="p-2 border border-solid border-primaryDivider rounded-lg hover:text-primary hover:border-primary">
+        <Profile width="20" height="20" />
+      </button>
     </div>
   )
 }

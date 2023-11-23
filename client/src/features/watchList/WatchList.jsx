@@ -90,7 +90,7 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
 
 
       const ws = new WebSocket('wss://streamer.finance.yahoo.com');
-      protobuf.load('../../../public/YPricingData.proto', (error, root) => {
+      protobuf.load('./YPricingData.proto', (error, root) => {
         if (error) {
           return console.log(error);
         }
@@ -177,6 +177,14 @@ const AddWatchListButton = ({ scrollToEnd }) => {
       if (watchListError) dispatch(resetError())
     }
   }, [isActive])
+
+  // Side Effect when a user sucessfully adds a new ticker
+  // the container will scroll to the end
+  useEffect(() => {
+    if (watchListStatus === "succeededToAddTicker") {
+      scrollToEnd();
+    }
+  }, [watchListStatus])
 
   // Side effect when 
   useEffect(() => {
