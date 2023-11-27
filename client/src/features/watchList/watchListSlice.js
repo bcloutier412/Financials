@@ -38,8 +38,11 @@ const watchListSlice = createSlice({
       console.log("reset error")
       state.error = "";
     },
-    updateData: (state, action) => {
+    updateData(state, action) {
       state.data = action.payload
+    },
+    resetState() {
+      return initialState;
     }
   },
   extraReducers(builder) {
@@ -77,7 +80,7 @@ const watchListSlice = createSlice({
   }
 })
 
-export const { resetError } = watchListSlice.actions
+export const { resetError, resetState } = watchListSlice.actions
 
 export const selectUserWatchList = state => state.watchList.data
 

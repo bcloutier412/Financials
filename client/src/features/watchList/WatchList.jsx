@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useSelector, useDispatch } from 'react-redux'
 import quoteService from '../../api/quoteService';
-import axios from 'axios'
 import protobuf from 'protobufjs';
 import { Buffer } from 'buffer/';
 

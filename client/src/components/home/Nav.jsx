@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useMemo, useRef, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { selectUser } from '../../features/user/userSlice'
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Transition } from '@headlessui/react'
+
+import { logoutUser } from '../../features/user/userSlice';
 
 import Logo from '../icons/Logo'
 import Bell from '../icons/Bell'
@@ -76,19 +79,76 @@ export const NavButtons = () => {
 }
 
 const NavUser = ({ userReference, width }) => {
-  const user = useSelector(selectUser)
+  const [isActive, setIsActive] = useState(false);
+  const [currentMenu, setCurrentMenu] = useState(null);
 
+  const handleClick = (e) => {
+    const name = e.target.name || e.target.parentNode.name || e.target.parentNode.parentNode.name;
+    if (!currentMenu) {
+      setIsActive(true);
+      setCurrentMenu(name);
+    } else if (currentMenu === name) {
+      setIsActive(false);
+    } else {
+      setCurrentMenu(name);
+    }
+  }
+
+  let menuToRender;
+
+  if (currentMenu == "settings") {
+    menuToRender = <Settings />
+  } else if (currentMenu == "notifications") {
+    menuToRender = (<div>notifications</div>)
+  } else if (currentMenu == "profile") {
+    menuToRender = (<div>profile</div>)
+  }
   return (
-    <div className="relative lg:p-4 p-2  flex gap-2 items-center justify-between" ref={userReference} style={{ minWidth: width, maxWidth: "170px" }}>
-      <button className="relative p-2 border border-solid border-primaryDivider rounded-lg hover:text-primary hover:border-primary">
+    <div className="relative lg:p-4 p-2 flex gap-4 items-center justify-between" ref={userReference} style={{ minWidth: width }}>
+      <button name="settings" onClick={handleClick} className="relative p-2 border border-solid border-primaryDivider rounded-lg hover:text-primary hover:border-primary">
         <Setting width="20" height="20" />
       </button>
-      <button className="p-2 border border-solid border-primaryDivider rounded-lg hover:text-primary hover:border-primary">
+      <button name="notifications" onClick={handleClick} className="p-2 border border-solid border-primaryDivider rounded-lg hover:text-primary hover:border-primary">
         <Bell width="20" height="20" />
       </button>
-      <button className="p-2 border border-solid border-primaryDivider rounded-lg hover:text-primary hover:border-primary">
+      <button name="profile" onClick={handleClick} className="p-2 border border-solid border-primaryDivider rounded-lg hover:text-primary hover:border-primary">
         <Profile width="20" height="20" />
       </button>
+
+      {/* Drop down menu */}
+      <div className="absolute right-2 top-[60px] w-[200px] z-50">
+        <Transition
+          show={isActive}
+          enter="transition-opacity duration-150"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          afterLeave={() => setCurrentMenu(null)}
+        >
+          <div className={`absolute w-full bg-white border border-solid rounded border-primaryDivider p-2`}>
+            {menuToRender}
+          </div>
+        </Transition>
+      </div>
+    </div>
+  )
+}
+
+const Settings = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    navigate('/login')
+  }
+  return (
+    <div>
+      <ul>
+        <li><header className="text-md underline">Settings</header></li>
+        <li onClick={handleLogout} className="hover:cursor-pointer">Logout</li>
+      </ul>
     </div>
   )
 }

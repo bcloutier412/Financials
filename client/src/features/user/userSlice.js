@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import userService from '../../api/userService'
 import authService from '../../api/authService'
+import { resetState } from '../watchList/watchListSlice'
 
 const initialState = {
   status: 'idle',
@@ -24,6 +25,17 @@ export const registerUser = createAsyncThunk('user/registerUser', async (loginIn
   return response.data
 })
 
+export const logoutUser = createAsyncThunk('user/logoutUser', async (_, {dispatch}) => {
+  dispatch(userSlice.actions.resetState())
+  dispatch(resetState())
+
+  try {
+    await authService.logoutUser();
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -31,6 +43,9 @@ const userSlice = createSlice({
     resetError(state) {
       console.log("reset error")
       state.error = "";
+    },
+    resetState() {
+      return initialState
     }
   },
   extraReducers(builder) {

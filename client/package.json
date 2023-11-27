@@ -13,6 +13,7 @@
     "testEnvironment": "jsdom"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.5.1",
     "bezier-js": "^6.1.4",
