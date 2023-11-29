@@ -42,7 +42,7 @@ const WatchList = () => {
 
   return (
     <div className="bg-primaryBackground">
-      <div ref={scrollContainerRef} className="container overflow-x-scroll custom-scrollbar flex px-1 pt-1 m-auto gap-2 lg:px-0 lg:pb-1 pb-3">
+      <div ref={scrollContainerRef} className="container overflow-x-scroll custom-scrollbar flex px-1 pt-2 m-auto gap-2 lg:pb-1 pb-3">
         {/** If Loading tickers render LoadingTickers component */}
         {/** If Failed to Load Tickers render failedLoadingTickers */}
         {/** Anything Else render the watchList */}
@@ -123,7 +123,7 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
   }, [])
 
   return (
-    <div className="relative shrink-0 bg-white rounded shadow flex py-2 items-center gap-6 px-5">
+    <div className="relative shrink-0 bg-white rounded shadow-component flex py-2 items-center gap-6 px-5">
       <div className="flex">
         <div className="flex flex-col w-[120px]">
           <div className="font-medium tracking-tight text-primary hover:cursor-pointer hover:underline">{ticker}</div>
@@ -191,7 +191,7 @@ const AddWatchListButton = ({ scrollToEnd }) => {
   }, [watchListStatus])
 
   return (
-    <div className="h-[75px] bg-white rounded flex items-center shadow">
+    <div className="h-[75px] bg-white rounded flex items-center shadow-md">
       {isActive &&
         <div className="transition-[height] w-max">
           {watchListStatus === "failedToAddTicker" && <div className="text-error text-xs truncate pl-1 mb-1">{watchListError}</div>}
@@ -221,7 +221,7 @@ const AddWatchListButton = ({ scrollToEnd }) => {
 
 const EditWatchListButton = ({ editIsActive, setEditIsActive }) => {
   return (
-    <div onClick={() => setEditIsActive(!editIsActive)} className={`h-[75px] ${editIsActive ? "bg-primary text-white" : "bg-white hover:text-primary"} rounded flex justify-center items-center shadow font-light hover:cursor-pointer`}>
+    <div onClick={() => setEditIsActive(!editIsActive)} className={`h-[75px] ${editIsActive ? "bg-primary text-white" : "bg-white hover:text-primary"} rounded flex justify-center items-center shadow-md font-light hover:cursor-pointer`}>
       {editIsActive ? <p className="px-2">Submit</p> : <p className="w-[52px] text-center">Edit</p>}
     </div>
   )

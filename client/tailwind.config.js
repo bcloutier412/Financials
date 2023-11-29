@@ -5,7 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      boxShadow: {
+        'menu': '0 12px 28px 0 rgba(0, 0, 0, 0.2)',
+        'component': '0 1px 3px 0 rgba(0, 0, 0, 0.2)',
+        'nav': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)'
+      }
+    },
     colors: {
       primary: 'rgba(67,83,240,255)',
       unconfirmedButton: 'rgba(67,83,240,.4)',

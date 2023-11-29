@@ -11,6 +11,7 @@ import Logo from '../icons/Logo'
 import Bell from '../icons/Bell'
 import Profile from '../icons/Profile';
 import Setting from '../icons/Setting'
+import Logout from '../icons/Logout';
 
 const Nav = () => {
   const [width, setWidth] = useState(0);
@@ -23,7 +24,7 @@ const Nav = () => {
     }
   }, []);
   return (
-    <div className="flex justify-between border-b border-solid border-b-primaryDivider">
+    <div className="flex justify-between z-50 shadow-nav">
       <NavLogo logoReference={logoReference} width={width} />
       <NavButtons />
       <NavUser userReference={userReference} width={width} />
@@ -116,7 +117,7 @@ const NavUser = ({ userReference, width }) => {
       </button>
 
       {/* Drop down menu */}
-      <div className="absolute right-2 top-[60px] w-[200px] z-50">
+      <div className="absolute right-2 top-[60px] w-[360px] z-50">
         <Transition
           show={isActive}
           enter="transition-opacity duration-150"
@@ -127,7 +128,7 @@ const NavUser = ({ userReference, width }) => {
           leaveTo="opacity-0"
           afterLeave={() => setCurrentMenu(null)}
         >
-          <div className={`absolute w-full bg-white border border-solid rounded border-primaryDivider p-2`}>
+          <div className={`absolute w-full bg-white border border-solid rounded border-primaryDivider shadow-menu`}>
             {menuToRender}
           </div>
         </Transition>
@@ -144,11 +145,14 @@ const Settings = () => {
     navigate('/login')
   }
   return (
-    <div>
-      <ul>
-        <li><header className="text-md underline">Settings</header></li>
-        <li onClick={handleLogout} className="hover:cursor-pointer">Logout</li>
-      </ul>
+    <div className="p-[8px]">
+      <header className="text-[24px] p-[8px] leading-tight">Settings</header>
+      <div onClick={handleLogout} className="flex items-center hover:cursor-pointer transition-all hover:bg-primaryBackground w-ful px-[8px] py-[8px] rounded-lg">
+        <div className="w-[36px] h-[36px] flex items-center justify-center rounded-full bg-primaryDivider mr-[4px]">
+          <Logout width={20} height={20} />
+        </div>
+        <div className="px-[8px] text-[15px]">Logout</div>
+      </div>
     </div>
   )
 }
