@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import quoteService from '../../api/quoteService';
 import protobuf from 'protobufjs';
 import { Buffer } from 'buffer/';
@@ -42,7 +43,7 @@ const WatchList = () => {
 
   return (
     <div className="bg-primaryBackground">
-      <div ref={scrollContainerRef} className="container overflow-x-scroll custom-scrollbar flex px-1 pt-2 m-auto gap-2 lg:pb-1 pb-3">
+      <div ref={scrollContainerRef} className="container overflow-x-scroll custom-scrollbar flex pt-2 m-auto gap-2 lg:pb-1 pb-3">
         {/** If Loading tickers render LoadingTickers component */}
         {/** If Failed to Load Tickers render failedLoadingTickers */}
         {/** Anything Else render the watchList */}
@@ -63,10 +64,12 @@ const WatchList = () => {
 
 const WatchListWidget = ({ ticker, editIsActive }) => {
   const dispatch = useDispatch()
+  const navigate = useNavigate();
   const [fullCompName, setFullCompName] = useState(null);
   const [marketPrice, setMarketPrice] = useState(null);
   const [marketPercentChange, setMarketPercentChange] = useState(null);
   const [marketPercentChangeIncrease, setMarketPercentChangeIncrease] = useState(null);
+  const [increaseOrDecrease, setIncreaseOrDecrease] = useState('idle');
 
   const handleDelete = (removedTicker) => dispatch(deleteWatchListTicker(removedTicker));
   const calculatePercentageChange = (pastMarketPrice, marketPrice) => {
@@ -89,7 +92,7 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
 
 
       const ws = new WebSocket('wss://streamer.finance.yahoo.com');
-      protobuf.load('./YPricingData.proto', (error, root) => {
+      protobuf.load(`/YPricingData.proto`, (error, root) => {
         if (error) {
           return console.log(error);
         }
@@ -126,7 +129,7 @@ const WatchListWidget = ({ ticker, editIsActive }) => {
     <div className="relative shrink-0 bg-white rounded shadow-component flex py-2 items-center gap-6 px-5">
       <div className="flex">
         <div className="flex flex-col w-[120px]">
-          <div className="font-medium tracking-tight text-primary hover:cursor-pointer hover:underline">{ticker}</div>
+          <div className="font-medium tracking-tight text-primary hover:cursor-pointer hover:underline" onClick={() => navigate(`asset/${ticker}`)}>{ticker}</div>
           <div className="font-light text-sm tracking-tight text-secondaryText truncate">{fullCompName ? fullCompName : <PlaceholderLoading shape="rect" width="120" height="20" />}</div>
         </div>
       </div>

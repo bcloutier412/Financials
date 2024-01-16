@@ -95,17 +95,16 @@ const NavUser = ({ userReference, width }) => {
     }
   }
 
-  let menuToRender;
-
-  if (currentMenu == "settings") {
-    menuToRender = <Settings />
-  } else if (currentMenu == "notifications") {
-    menuToRender = (<div>notifications</div>)
-  } else if (currentMenu == "profile") {
-    menuToRender = (<div>profile</div>)
+  const menus = {
+    "settings": <Settings />,
+    "notifications": <div>notifications</div>,
+    "profile": <div>profile</div>
   }
+  
+  let menuToRender = menus[currentMenu];
+
   return (
-    <div className="relative lg:p-4 p-2 flex gap-4 items-center justify-between" ref={userReference} style={{ minWidth: width }}>
+    <div className="relative lg:p-4 p-2 flex lg:gap-4 gap-2 items-center justify-between" ref={userReference} style={{ minWidth: width }}>
       <button name="settings" onClick={handleClick} className="relative p-2 border border-solid border-primaryDivider rounded-lg hover:text-primary hover:border-primary">
         <Setting width="20" height="20" />
       </button>

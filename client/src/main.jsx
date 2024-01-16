@@ -11,6 +11,8 @@ import Login from './components/login/Login.jsx'
 import Register from './components/login/Register.jsx'
 import Home from './components/home/Home.jsx'
 import Dashboard from './components/home/Dashboard.jsx';
+import Assets from './components/assets/Assets.jsx';
+import Asset from './components/assets/Asset.jsx'
 import ErrorPage from './error-page.jsx';
 
 const router = createBrowserRouter([
@@ -33,7 +35,11 @@ const router = createBrowserRouter([
           },
           {
             path: "assets",
-            element: <div>Assets</div>
+            element: <Assets />,
+          },
+          {
+            path: "asset/:ticker",
+            element: <Asset />
           },
           {
             path: "news",
