@@ -9,25 +9,20 @@ import { TailSpin } from "react-loading-icons";
 const Asset = () => {
   const { ticker } = useParams();
 
-  useEffect(() => {
-    const requestStockDataAndChartData = async (ticker) => {
-      const api_response = await quoteService.getQuoteChartAndSearch(ticker);
-      console.log(api_response)
-    }
-    console.log(ticker)
-    requestStockDataAndChartData(ticker)
-  }, [ticker])
   return (
-    <div className="bg-primaryBackground h-full lg:pt-[2px] overflow-scroll">
+    <div className="bg-primaryBackground h-full lg:pt-[2px] overflow-scroll flex flex-col lg:gap-2">
       <div className="container mx-auto flex lg:flex-row flex-col lg:gap-4">
-        <StockInfo_Chart ticker={ticker} />
+        <StockChart ticker={ticker} />
         <BuySell />
+      </div>
+      <div className="container mx-auto">
+        <StockInfo ticker={ticker} />
       </div>
     </div>
   )
 }
 
-const StockInfo_Chart = ({ ticker }) => {
+const StockChart = ({ ticker }) => {
   const [isLoading, setIsLoading] = useState(true);
   const chartContainerRef = useRef();
   const chartContainerWrapper = useRef();
@@ -39,8 +34,8 @@ const StockInfo_Chart = ({ ticker }) => {
    */
   useEffect(() => {
     if (chart.current) {
-      setIsLoading(true);
       chart.current.chartElement().style.display = "none";
+      setIsLoading(true);
     }
   }, [ticker])
 
@@ -50,16 +45,16 @@ const StockInfo_Chart = ({ ticker }) => {
   useEffect(() => {
     const populateStateAndChartData = async (ticker) => {
       // Render chart data from server
-      const response = await quoteService.getQuoteChartAndSearch(ticker);
+      const response = await quoteService.getChartData(ticker);
       const tempChartData = [];
 
-      for (let i = 0; i < response.data.data.chart.timestamp.length; i++) {
+      for (let i = 0; i < response.data.data.timestamp.length; i++) {
         const candle = {
-          open: response.data.data.chart.indicators.quote[0].open[i],
-          high: response.data.data.chart.indicators.quote[0].high[i],
-          low: response.data.data.chart.indicators.quote[0].low[i],
-          close: response.data.data.chart.indicators.quote[0].close[i],
-          time: response.data.data.chart.timestamp[i]
+          open: response.data.data.indicators.quote[0].open[i] || undefined,
+          high: response.data.data.indicators.quote[0].high[i] || undefined,
+          low: response.data.data.indicators.quote[0].low[i] || undefined,
+          close: response.data.data.indicators.quote[0].close[i] || undefined,
+          time: response.data.data.timestamp[i]
         }
         tempChartData.push(candle)
       }
@@ -71,13 +66,18 @@ const StockInfo_Chart = ({ ticker }) => {
             background: { type: ColorType.Solid, color: 'white' },
             textColor: 'rgba(0,0,0,.6)',
           },
+          grid: {
+            horzLines: {
+              color: '#eee'
+            }
+          },
           rightPriceScale: {
             autoScale: true,
             borderVisible: false
           },
           timeScale: {
             borderVisible: false,
-            timeVisible: true
+            timeVisible: true,
           },
           height: chartContainerWrapper.current.clientHeight,
           width: chartContainerWrapper.current.clientWidth
@@ -88,8 +88,14 @@ const StockInfo_Chart = ({ ticker }) => {
 
       // Reset the visibility of the chart
       // Populate chart with data
-      setIsLoading(false)
       dataSeries.current.setData(tempChartData);
+      chart.current.timeScale().fitContent();
+      chart.current.applyOptions({
+        rightPriceScale: {
+          autoScale: true, // Reset the right price scale to its default state
+        },
+      });
+      setIsLoading(false)
       chart.current.chartElement().style.display = "block"
     }
     populateStateAndChartData(ticker)
@@ -104,7 +110,7 @@ const StockInfo_Chart = ({ ticker }) => {
   }, [ticker])
 
   return (
-    <div className="grow bg-white rounded shadow-component">
+    <div className="grow bg-white lg:rounded lg:shadow-component">
       {/** HEADER **/}
       <header className="p-5">
         <h1 className="text-lg">
@@ -116,8 +122,8 @@ const StockInfo_Chart = ({ ticker }) => {
       <div className="h-[1px] bg-secondaryOutline mx-5"></div>
 
       {/** CHART **/}
-      <div className="lg:h-[700px] h-[300px]" ref={chartContainerWrapper}>
-        {isLoading && <div className="h-full flex justify-center items-center">
+      <div className="relative lg:h-[700px] h-[300px]" ref={chartContainerWrapper}>
+        {isLoading && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 h-full flex justify-center items-center">
           <TailSpin
             className="h-12 w-12 mx-auto"
             stroke="#3482F6"
@@ -132,10 +138,35 @@ const StockInfo_Chart = ({ ticker }) => {
 
 const BuySell = () => {
   return (
-    <div className="shrink-0 w-1/5 h-fit bg-white rounded shadow-component">
+    <div className="shrink-0 lg:w-1/5 h-fit bg-white lg:rounded lg:shadow-component">
       <header className="p-5">
         <h1 className="text-lg">Make a trade</h1>
       </header>
+    </div>
+  )
+}
+
+const StockInfo = ({ ticker }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [stockInfo, setStockInfo] = useState(undefined);
+
+  useEffect(() => {
+    const populateStockInfo = async () => {
+      const response = await quoteService.getStockInfo(ticker);
+      const another_response = await quoteService.getOptionsData(ticker);
+      console.log(another_response)
+      console.log(response)
+      // console.log(response.data.quote.quotes[0])
+      setStockInfo(response.data.quote.quotes[0])
+    }
+    populateStockInfo();
+  }, [ticker])
+
+  return (
+    <div className="grid grid-cols-3 p-5 bg-white lg:rounded lg:shadow-component">
+      <div>HELELELLELELLE</div>
+      <div>HERE IS ANOTHER ONE</div>
+      <div>LMAO</div>
     </div>
   )
 }
