@@ -23,7 +23,7 @@ const Footer = () => {
     }
   ]
   
-  const selected = "border-b border-solid border-b-primary text-primary";
+  const selected = "relative border-b border-solid border-b-primary text-primary";
 
   let lastPath = useMemo(() => {
     let parts = location.pathname.split('/');
@@ -31,7 +31,7 @@ const Footer = () => {
   }, [location])
 
   return (
-    <div className="w-full bg-white gap-8 font-light lg:hidden flex justify-center border">
+    <div className="absolute bottom-0 w-full bg-white gap-8 font-light lg:hidden flex justify-center border">
       {buttons.map((button) => {
         return (<button key={button.name} className={`${lastPath === button.name && selected} py-4`} onClick={() => navigate(button.navigate)}>{button.text}</button>)
       })}

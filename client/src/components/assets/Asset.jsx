@@ -149,22 +149,27 @@ const BuySell = () => {
 const StockInfo = ({ ticker }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [stockInfo, setStockInfo] = useState(undefined);
+  const [quoteInfo, setQuoteInfo] = useState(undefined);
 
   useEffect(() => {
     const populateStockInfo = async () => {
-      const response = await quoteService.getStockInfo(ticker);
-      const another_response = await quoteService.getOptionsData(ticker);
-      console.log(another_response)
-      console.log(response)
-      // console.log(response.data.quote.quotes[0])
-      setStockInfo(response.data.quote.quotes[0])
+      const info = await quoteService.getOptionsData(ticker);
+      console.log(info)
+      // const stockInfo = await Promise.all([quoteService.getStockInfo(ticker), quoteService.getOptionsData(ticker)])
+      // console.log('here')
+      // setStockInfo(stockInfo[0].data.quote.quotes[0])
+      // setQuoteInfo(stockInfo[1].data.optionsData.optionChain.result[0].quote)
+      // console.log(stockInfo[0].data.quote.quotes[0])
+      // console.log(stockInfo[1].data.optionsData.optionChain.result[0].quote)
+      // setIsLoading(false);
     }
     populateStockInfo();
   }, [ticker])
 
   return (
     <div className="grid grid-cols-3 p-5 bg-white lg:rounded lg:shadow-component">
-      <div>HELELELLELELLE</div>
+      <div>
+      </div>
       <div>HERE IS ANOTHER ONE</div>
       <div>LMAO</div>
     </div>

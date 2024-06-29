@@ -1,0 +1,1 @@
+1. Need to create a redux state for the assets page so that I dont have to reload the information for the different categories.

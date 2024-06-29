@@ -1,8 +1,15 @@
 import React, { useEffect, useState, useRef } from "react"
+import { useSelector, useDispatch } from 'react-redux'
+
+// Selectors
+import { selectUserWatchList } from "../../features/watchList/watchListSlice";
 
 const Assets = () => {
   const [assetTypeSelected, setAssetTypeSelected] = useState("all")
   const selected = "border-b border-solid border-b-primary text-primary";
+
+  const watchList = useSelector(selectUserWatchList);
+  
   return (
     <div className="grow bg-primaryBackground">
       <div className="container m-auto bg-white rounded shadow-component p-5">
@@ -15,6 +22,9 @@ const Assets = () => {
             search
           </div>
         </header>
+        {watchList.map(ticker => {
+          return <div key={ticker}>{ticker}</div>
+        })}
       </div>
     </div>
   )
