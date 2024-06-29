@@ -1,1 +1,1 @@
-![FinancialsScreenshot](/git-images/FinancialsStock.png)
+![FinancialsScreenshot](/git-img/FinancialsStock.png)
